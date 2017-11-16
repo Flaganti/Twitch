@@ -31,16 +31,15 @@ def bot_loop():
             s[0].send("PONG :tmi.twitch.tv\r\n".encode("utf-8"))
             print("Pong")
         else:
-            print(response+"\r\n")
-            username = re.search(r"\w+", response).group(0)
-            message = CHAT_MSG.sub("", response)
-            print(username + ": " + message+"\r\n")
-            if message.startswith("!",0,1):
-                utility.func_command(s[0],username,message)
-            #for pattern in config.BAN_PAT:
-            #    if re.match(pattern, message):
-            #        utility.ban(s[0], username)
-            #        break
+            try:
+                print(response+"\r\n")
+                username = re.search(r"\w+", response).group(0)
+                message = CHAT_MSG.sub("", response)
+                print(username + ": " + message+"\r\n")
+                if message.startswith("!",0,1):
+                    utility.func_command(s[0],username,message)
+            except Exception as e:
+                print e
         time.sleep(1 / config.MODRATE)
 
 if __name__ == "__main__":
