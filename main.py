@@ -26,7 +26,7 @@ except Exception as e:
 def bot_loop():
     while connected:
         response = s[0].recv(1024).rstrip()
-        if response == "PING :tmi.twitch.tv\r\n":
+        if response == "PING :tmi.twitch.tv":
             print(response+"\r\n")
             s[0].send("PONG :tmi.twitch.tv\r\n".encode("utf-8"))
             print("Pong")
