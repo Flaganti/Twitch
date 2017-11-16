@@ -51,6 +51,8 @@ def func_command(sock, username, message):
 						resp = '@%s > %s' % (username, result)
 						print(resp)
 						chat(sock, "{}".format(resp).encode("utf-8"))
+			else:
+				chat(sock, "{}".format(commands.pass_to_function(command, ('',''))).encode("utf-8"))
 
 		else:
 			if commands.is_on_cooldown(command):

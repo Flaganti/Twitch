@@ -10,6 +10,7 @@ commands = {
     '!test':{
         'limit': 0,
         'return': 'This is a test'
+
     },
     '!limit':{
         'limit': 30,
