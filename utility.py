@@ -52,7 +52,7 @@ def func_command(sock, username, message):
 						print(resp)
 						chat(sock, "{}".format(resp).encode("utf-8"))
 			else:
-				chat(sock, "{}".format(commands.pass_to_function(command, ('',''))).encode("utf-8"))
+				chat(sock, "{}".format(commands.pass_to_function(command.split(' ')[0], ('',''))).encode("utf-8"))
 
 		else:
 			if commands.is_on_cooldown(command):
