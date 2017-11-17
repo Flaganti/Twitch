@@ -25,7 +25,7 @@ commands = {
         'limit': 30,
         'argc': 2,
         'return': "command",
-        'access': 0
+        'access': 1
     },
     '!hug':{
         'limit':0,
