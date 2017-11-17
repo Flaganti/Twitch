@@ -44,7 +44,7 @@ def func_command(sock, username, message):
 
 				else:
 					print('Command is valid an not on cooldown. (%s) (%s)' % (command, username))
-					result = commands.pass_to_function(username,command, args)
+					result = commands.pass_to_function(command, args)
 					commands.update_last_used(command)
 
 					if result:

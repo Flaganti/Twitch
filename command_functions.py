@@ -42,7 +42,7 @@ def check_returns_function(command): #Check if the command return as fucntion
 	if commands[command]['return'] == 'command':
 		return True
 
-def pass_to_function(username, command, args): #Passes the arguments to a seperate function
+def pass_to_function(command, args): #Passes the arguments to a seperate function
 	command = command.replace('!', '')
 
 	module = importlib.import_module('commands.%s' % command)
@@ -50,7 +50,7 @@ def pass_to_function(username, command, args): #Passes the arguments to a sepera
 
 	if args:
 		# need to reference to commands.<command
-		return function(username,args)
+		return function(args)
 	else:
 		# need to reference to commands.<command
-		return function(username)
+		return function()
