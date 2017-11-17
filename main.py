@@ -18,7 +18,7 @@ try:
     s[0].send("CAP REQ :twitch.tv/commands\r\n".encode("utf-8"))
 
     s[0].send("JOIN {}\r\n".format(config.CHAN).encode("utf-8"))
-    connected = True #Socket succefully connected
+    connected = True #Socket successfully connected
 except Exception as e:
     print(str(e))
     connected = False #Socket failed to connect

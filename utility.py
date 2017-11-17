@@ -31,7 +31,7 @@ def timeout(sock, user, secs=600):
 	chat(sock, ".timeout {}".format(user, secs))
 
 def func_command(sock, username, message):
-	if commands.is_valid_command(message) or commands.is_valid_command(message.split(' ')[0]):
+	if (commands.is_valid_command(message) or commands.is_valid_command(message.split(' ')[0])) and (commands.check_access_level(username,message.split(' ')[0]) or commands.check_access_level(username,message)):
 		command = message
 		if commands.check_returns_function(command.split(' ')[0]):
 			if commands.check_has_correct_args(command, command.split(' ')[0]): #TODO: CHANGE this or ANND QUERRY FLAG TO FUNCTION

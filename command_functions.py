@@ -4,6 +4,7 @@ from command_headers import *
 
 import importlib
 
+
 def is_valid_command(command): #Checks if command is in commands
 	if command in commands:
 		return True
@@ -40,6 +41,11 @@ def check_has_correct_args(message, command):
 
 def check_returns_function(command): #Check if the command return as fucntion
 	if commands[command]['return'] == 'command':
+		return True
+def get_user_level(username):
+	return 4
+def check_access_level(username,command):
+	if(commands[command]['access'] >= get_user_level(username)):
 		return True
 
 def pass_to_function(command, args): #Passes the arguments to a seperate function

@@ -1,7 +1,7 @@
 from command_headers import *
 
 def command(args):
-    usage = "!command [add|edit|del] [command_name] [cooldown] [command string]"
+    usage = "!command [add|edit|del] [command_name] [cooldown] [access] [command string]"
     try:
         command_header = args[0]
         command_name=args[1]
@@ -9,6 +9,8 @@ def command(args):
             del commands[command_header]
             return "Command was successfully deleted."
         cooldown = int(args[2])
+        access = int(args[3])
+        del args[0]
         del args[0]
         del args[0]
         del args[0]
@@ -18,12 +20,14 @@ def command(args):
                 'limit':cooldown,
                 'argc':0,
                 'return':command_string,
+                'access':access,
                 'last_used':0
             }})
             return "Command was successfully created."
         elif(command_header=="edit"):
             commands[command_name]['limit']=cooldown
             commands[command_name]['return']=command_string
+            commands[command_name]['access']=access
             commands[command_name]['last_used']=0
             return "Command was successfully edited."
         else:
