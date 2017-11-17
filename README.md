@@ -9,7 +9,7 @@ Yes. Use the !command
 Or if you know some python you can add commands in the command_headers.py
 
     commands = {
-        '!test':{                            #->   command name
+        '!test':{                           #->   command name
             'limit': 0,                     #->   time limit in seconds
             'argc': 0,                      #->   number of arguments needed -> only used for commands with return value of 'command'
             'return': 'This is a test'      #->   return value, if 'command' -> execute command in commands
