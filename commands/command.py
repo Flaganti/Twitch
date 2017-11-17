@@ -8,11 +8,11 @@ def command(args):
         if(command_header=="del"):
             del commands[command_header]
             return "Command was successfully deleted."
-        cooldown = args [2]
+        cooldown = int(args[2])
         del args[0]
         del args[0]
         del args[0]
-        command_string = str(args)
+        command_string = " ".join(args)
         if(command_header=="add"):
             commands.update({command_name:{
                 'limit':cooldown,
