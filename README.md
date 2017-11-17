@@ -37,13 +37,13 @@ create your own python file and put it into the commands [folder](https://github
         return usage
     return data
 
-##Features
-###Working Features
+## Features
+### Working Features
 * Read chat
 * Reply to commands
 * Add custom commands
 
-###To be implamented
+### To be implamented
 * Moderation support
 * Point system
 * Webserver for Point store
