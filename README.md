@@ -42,8 +42,10 @@ create your own python file and put it into the commands [folder](https://github
 * Read chat
 * Reply to commands
 * Add custom commands
+* Access levels for commands
 
 ### To be implamented
+* Timers
 * Moderation support
 * Point system
 * Webserver for Point store
