@@ -16,15 +16,17 @@ try:
 
     s[0].send("CAP REQ :twitch.tv/membership\r\n".encode("utf-8"))
     s[0].send("CAP REQ :twitch.tv/commands\r\n".encode("utf-8"))
-
+    #s[0].send("CAP REQ :twitch.tv/tags\r\n".encode("utf-8")) #Needs re changing! so it can read tags
     s[0].send("JOIN {}\r\n".format(config.CHAN).encode("utf-8"))
     connected = True #Socket successfully connected
 except Exception as e:
     print(str(e))
     connected = False #Socket failed to connect
 
-def bot_loop():
+def bot_loop(): #TODO: Change to a queueing system so spamm gets proccessed more quickly -> Sending will be restricted to MODRATE or RATE
     while connected:
+        #TODO: Add timer commands (messages that get executed on a set interval)
+        #TODO: Giveaway system
         response = s[0].recv(1024).rstrip()
         if response == "PING :tmi.twitch.tv":
             print(response+"\r\n")
@@ -40,6 +42,7 @@ def bot_loop():
                     utility.func_command(s[0],username,message)
             except Exception as e:
                 print e
+
         time.sleep(1 / config.MODRATE)
 
 if __name__ == "__main__":

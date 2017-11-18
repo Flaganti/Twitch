@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 #commands = {
 #    '!test':{                          ->   command name
 #        'limit': 0,                    ->   time limit in seconds
@@ -30,7 +30,7 @@ commands = {
     '!hug':{
         'limit':0,
         'argc':0,
-        'return':"/me hugs {target} (> *^* <)".encode('utf-8'),
+        'return':"/me hugs {target} (> ˙^˙ <)",
         'access': 0
     },
     '!command':{

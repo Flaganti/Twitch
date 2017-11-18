@@ -1,5 +1,5 @@
 from command_headers import *
-
+#TODO: Save changes to file
 def command(args):
     usage = "!command [add|edit|del] [command_name] [cooldown] [access] [command string]"
     try:
