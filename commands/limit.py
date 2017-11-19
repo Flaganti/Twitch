@@ -1,5 +1,5 @@
 def limit(args):
-    usage = "Usage: !limit <number1> <number2>"
+    usage = "/me {user} -> Usage: !limit <number1> <number2>"
     data =''
 
     try:

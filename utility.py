@@ -1,6 +1,7 @@
+# -*- coding: utf-8 -*-
 import config
 import command_functions as commands
-from string import Template
+
 
 def chat(sock, msg):
 	"""
@@ -9,7 +10,7 @@ def chat(sock, msg):
 	sock -- the socket over which to send the message
 	msg  -- the message to be sent
 	"""
-	sock.send(("PRIVMSG {} :{}\r\n".format(config.CHAN, msg)).encode("UTF-8"))
+	sock.send(("PRIVMSG {} :{}\r\n".format(config.CHAN, msg)))
 
 def ban(sock, user):
 	"""
@@ -50,9 +51,9 @@ def func_command(sock, username, message):
 					if result:
 						resp = '@%s > %s' % (username, result)
 						print(resp)
-						chat(sock, "{}".format(resp).encode("utf-8"))
+						chat(sock, command_formatter_message(result,username))
 			else:
-				chat(sock, "{}".format(commands.pass_to_function(command.split(' ')[0], ('',''))).encode("utf-8"))#Print out command usage!
+				chat(sock, command_formatter_message(commands.pass_to_function(command.split(' ')[0], ('','')),username))#Print out command usage!
 
 		else:
 			if commands.is_on_cooldown(command.split(' ')[0]):
@@ -66,20 +67,46 @@ def func_command(sock, username, message):
 
 			elif commands.check_has_return(command):
 				print('Command is valid an not on cooldown. (%s) (%s)' % (command, username))
-				commands.update_last_used(command)
 
 				resp = '@%s > %s' % (username, commands.get_return(command))
 				commands.update_last_used(command)
 
 				print(resp)
-				chat(sock, "{}".format(resp).encode("utf-8"))
+				chat(sock,command_formatter(username,command,[]))
 
 def give_points():
 	return ''
+
+def command_formatter_message(message,username=''):
+	argc={'user':username,'points':0}
+	return str(message.format(**argc))
+
 def command_formatter(username,command,args):
-    argc={}
-    if(len(args)<1):
-        argc={'user':username,'target':username,'points':0}
-    else:
-        argc={'user':username,'target':args[0],'points':0}
-    return str(commands.get_return(command)).format(**argc)
+	argc={}
+	if(len(args)<1):
+		argc={'user':username,'target':username,'points':0}
+	else:
+		argc={'user':username,'target':args[0],'points':0}
+	result = commands.get_return(command)
+	result = str(result).format(**argc)
+	return result
+
+
+def check_timers(sock):
+	command = commands.return_commands()
+	for key in command:
+		if(commands.check_is_timed(key)):
+			print(commands.get_last_used(key))
+			if(commands.get_last_used(key) >= commands.get_timer_repeat(key)):
+				if(commands.get_return(key)=='command'):
+					result = commands.pass_to_function(key,[])
+					chat(sock, command_formatter_message(result))
+				else:
+					result = command_formatter('',key,[])
+					chat(sock, result)
+				commands.update_last_used(key)
+
+
+
+
+

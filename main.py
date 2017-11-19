@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 import config
 import utility
 import socket
@@ -41,8 +42,9 @@ def bot_loop(): #TODO: Change to a queueing system so spamm gets proccessed more
                 if message.startswith("!",0,1):
                     utility.func_command(s[0],username,message)
             except Exception as e:
-                print e
+                print(e)
 
+        utility.check_timers(s[0])
         time.sleep(1 / config.MODRATE)
 
 if __name__ == "__main__":

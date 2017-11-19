@@ -11,12 +11,19 @@ Yes. Use the !command
 Or if you know some python you can add commands in the command_headers.py
 
     commands = {
-        '!test':{                           #->   command name
-            'limit': 0,                     #->   time limit in seconds
-            'argc': 0,                      #->   number of arguments needed -> only used for commands with return value of 'command'
-            'return': 'This is a test'      #->   return value, if 'command' -> execute command in commands
+        '!test':{                          ->   command name
+            'limit': 0,                    ->   time limit in seconds
+            'argc': 0,                     ->   number of arguments needed -> only used for commands with return value of 'command'
+            'return': 'This is a test'     ->   return value, if 'command' -> execute command in commands
+            'access': [0,1,2,3,4]
         }
     }
+    Access Levels:
+    0 -> Everyone
+    1 -> Regular
+    2 -> Subscriber
+    3 -> Moderator
+    4 -> Owner
     
 if you used 'command' as the return value
 create your own python file and put it into the commands [folder](https://github.com/Flaganti/Twitch/blob/master/commands/)

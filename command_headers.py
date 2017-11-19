@@ -5,6 +5,8 @@
 #        'argc': 0,                     ->   number of arguments needed -> only used for commands with return value of 'command'
 #        'return': 'This is a test'     ->   return value, if 'command' -> execute command in commands
 #        'access': [0,1,2,3,4]
+#        'is_timed': 0,1                ->   0 no, 1 yes
+#        'timer_repeat': 300            ->   time in seconds
 #    }
 # Access Levels:
 #   0 -> Everyone
@@ -18,13 +20,13 @@
 commands = {
     '!test':{
         'limit': 0,
-        'return': "This is a test",
+        'return': '/me This is a test',
         'access': 0
     },
     '!limit':{
         'limit': 30,
         'argc': 2,
-        'return': "command",
+        'return': 'command',
         'access': 1
     },
     '!hug':{
@@ -36,9 +38,18 @@ commands = {
     '!command':{
         'limit':30,
         'argc':2,
-        'return':'command',
+        'return':"command",
         'access': 3
+    },
+    '!tt':{
+        'limit':0,
+        'return':'/me This is a timer test',
+        'access': 3,
+        'is_timed': 1,
+        'argc':0,
+        'timer_repeat': 300
     }
+
 }
 
 for command in commands:
