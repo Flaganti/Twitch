@@ -19,7 +19,7 @@ try:
     s[0].send("CAP REQ :twitch.tv/commands\r\n".encode("utf-8"))
     #s[0].send("CAP REQ :twitch.tv/tags\r\n".encode("utf-8")) #Needs re changing! so it can read tags
     s[0].send("JOIN {}\r\n".format(config.CHAN).encode("utf-8"))
-    s[0].settimeout(5)
+    s[0].settimeout(5) #Set timeout for socket
     connected = True #Socket successfully connected
 except Exception as e:
     print(str(e))
