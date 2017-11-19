@@ -81,28 +81,27 @@ def command_formatter_message(message,username=''):
 	argc={'user':username,'points':0}
 	return str(message.format(**argc))
 
-def command_formatter(username,command,args):
+def command_formatter(username,command,args): # formats the string
 	argc={}
 	if(len(args)<1):
-		argc={'user':username,'target':username,'points':0}
+		argc={'user':username,'target':username,'points':0} #creats dict
 	else:
 		argc={'user':username,'target':args[0],'points':0}
-	result = commands.get_return(command)
-	result = str(result).format(**argc)
-	return result
+
+	return str(commands.get_return(command)).format(**argc) #replaces values with dict values
 
 
-def check_timers(sock):
+def check_timers(sock): #Checks for timers
 	command = commands.return_commands()
 	for key in command:
 		if(commands.check_is_timed(key)):
 			print(commands.get_last_used(key))
 			if(commands.get_last_used(key) >= commands.get_timer_repeat(key)):
-				if(commands.get_return(key)=='command'):
+				if(commands.get_return(key)=='command'): #if the timer is a seperate command -> execute this
 					result = commands.pass_to_function(key,[])
-					chat(sock, command_formatter_message(result))
+					chat(sock, command_formatter_message(result)) #formats result from command
 				else:
-					result = command_formatter('',key,[])
+					result = command_formatter('',key,[]) #formats result from timer
 					chat(sock, result)
 				commands.update_last_used(key)
 
