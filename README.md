@@ -16,6 +16,8 @@ Or if you know some python you can add commands in the command_headers.py
             'argc': 0,                     ->   number of arguments needed -> only used for commands with return value of 'command'
             'return': 'This is a test'     ->   return value, if 'command' -> execute command in commands
             'access': [0,1,2,3,4]
+            'is_timed': 0,1                ->   0 no, 1 yes
+            'timer_repeat': 300            ->   time in seconds
         }
     }
     Access Levels:
