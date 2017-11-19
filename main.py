@@ -44,7 +44,7 @@ def bot_loop(): #TODO: Change to a queueing system so spamm gets proccessed more
             except Exception as e:
                 print(e)
 
-        utility.check_timers(s[0])
+        utility.check_timers(s[0]) # Checks if any timers need execution
         time.sleep(1 / config.MODRATE)
 
 if __name__ == "__main__":
