@@ -16,7 +16,9 @@
 #   4 -> Owner
 #
 
-#TODO: Commands can be added while the program is running. New file is saved seperatly -> When updating file is coppied into the new version. (or make a database of commands)
+#TODO: Make this a SQL database
+#TODO: function reads from database of commands
+#TODO: Makes it a dict, when new command is added run the command again
 commands = {
     '!test':{
         'limit': 0,

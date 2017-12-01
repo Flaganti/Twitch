@@ -19,7 +19,7 @@ try:
     s[0].send("CAP REQ :twitch.tv/commands\r\n".encode("utf-8"))
     #s[0].send("CAP REQ :twitch.tv/tags\r\n".encode("utf-8")) #Needs re changing! so it can read tags
     s[0].send("JOIN {}\r\n".format(config.CHAN).encode("utf-8"))
-    s[0].settimeout(5) #Set timeout for socket
+    s[0].settimeout(0) #Set timeout for socket
     connected = True #Socket successfully connected
 except Exception as e:
     print(str(e))
@@ -37,7 +37,7 @@ def bot_loop(): #TODO: Change to a queueing system so spamm gets proccessed more
                 print("Pong")
             else:
                 try:
-                    print(response+"\r\n")
+                    #print(response+"\r\n")
                     username = re.search(r"\w+", response).group(0)
                     message = CHAT_MSG.sub("", response)
                     print(username + ": " + message+"\r\n")
@@ -47,8 +47,9 @@ def bot_loop(): #TODO: Change to a queueing system so spamm gets proccessed more
                     print(e)
         except Exception as e:
             utility.check_timers(s[0]) # Checks if any timers need execution
+            utility.chatEnQ()
             #print(e)
-        time.sleep(1 / config.MODRATE)
+        #time.sleep(1 / config.MODRATE)# Not needed anymore as chatEnQ takes care of it
 
 if __name__ == "__main__":
     bot_loop()

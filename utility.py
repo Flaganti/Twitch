@@ -1,16 +1,23 @@
 # -*- coding: utf-8 -*-
 import config
 import command_functions as commands
+import time
 
 
+lastsent = 0
+queue = []
 def chat(sock, msg):
-	"""
-	Send a chat message to the server.
-	Keyword arguments:
-	sock -- the socket over which to send the message
-	msg  -- the message to be sent
-	"""
-	sock.send(("PRIVMSG {} :{}\r\n".format(config.CHAN, msg)))
+	#Queues the message
+	global queue
+	queue.append([sock,msg])
+
+def chatEnQ(): #UnQueues the message and sends it
+	global lastsent
+	global queue
+	if (time.time()-lastsent > (1/config.MODRATE) and len(queue)>0):
+		sockthis,msgthis = queue.pop()
+		sockthis.send(("PRIVMSG {} :{}\r\n".format(config.CHAN, msgthis)))
+		lastsent=time.time()
 
 def ban(sock, user):
 	"""
@@ -95,7 +102,7 @@ def check_timers(sock): #Checks for timers
 	command = commands.return_commands()
 	for key in command:
 		if(commands.check_is_timed(key)):
-			print(commands.get_last_used(key))
+			#print(commands.get_last_used(key))
 			if(commands.get_last_used(key) >= commands.get_timer_repeat(key)):
 				if(commands.get_return(key)=='command'): #if the timer is a seperate command -> execute this
 					result = commands.pass_to_function(key,[])
