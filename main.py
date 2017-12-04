@@ -48,6 +48,7 @@ def bot_loop(): #TODO: Change to a queueing system so spamm gets proccessed more
         except Exception as e:
             utility.check_timers(s[0]) # Checks if any timers need execution
             utility.chatEnQ()
+            #utility.try_giving_points()
             #print(e)
         #time.sleep(1 / config.MODRATE)# Not needed anymore as chatEnQ takes care of it
 

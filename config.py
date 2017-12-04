@@ -5,4 +5,6 @@ PASS = "oauth:za9r078fwx8zwd7zc7q9mfeisl0srx" # your Twitch OAuth token
 CHAN = "#flaganti"                   # the channel you want the bot to join.
 RATE = (20/30) # 20 messages in 30 seconds
 MODRATE = (100/30) # 100 messages in 30 seconds
+POINTAMOUNT = 100 #How many points you get
+TIMERFORPOINTS = 15*60 #How often you get the points in seconds
 BAN_PAT=[]

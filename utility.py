@@ -2,8 +2,12 @@
 import config
 import command_functions as commands
 import time
+import threading
+import sqlite3
 
 
+
+point_timer = 0
 lastsent = 0
 queue = []
 def chat(sock, msg):
@@ -81,8 +85,32 @@ def func_command(sock, username, message):
 				print(resp)
 				chat(sock,command_formatter(username,command,[]))
 
-def give_points():
-	return ''
+
+def try_giving_points():
+	global point_timer
+	if(time.time() - point_timer >= config.TIMERFORPOINTS):
+		#Get list of viewers (async)
+		#Open database and assign points to viewers
+		viewers = []
+		give_points(viewers)
+		point_timer = time.time()
+
+def give_points(viewers):
+	try:
+		conn = sqlite3.connect('pointsDB.db')
+		cursor = conn.cursor()
+		#TODO: Check if tables exists
+		for viewer in viewers:
+			argc={'viewer':viewer,'points':config.POINTAMOUNT}
+			cursor.execute("IF NOT EXISTS(SELECT Viewer from Points WHERE Viewer = {viewer}) ".format(**argc) +
+                           "INSERT INTO Points(Viewer, Points) VALUES({viewer}, {points}) ".format(**argc)+
+                           "ELSE "+
+                           "UPDATE Points SET Viewer = {viewer}, Points = Points + {points} WHERE Viewer = {viewer}".format(**argc))
+		cursor.close()
+		conn.close()
+	except Exception as e:
+		print("Database Error: ")
+		print(e)
 
 def command_formatter_message(message,username=''):
 	argc={'user':username,'points':0}
