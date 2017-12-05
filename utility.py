@@ -7,7 +7,7 @@ import sqlite3
 
 
 
-point_timer = 0
+point_timer = time.time()
 lastsent = 0
 queue = []
 def chat(sock, msg):
@@ -89,9 +89,10 @@ def func_command(sock, username, message):
 def try_giving_points():
 	global point_timer
 	if(time.time() - point_timer >= config.TIMERFORPOINTS):
+		print("Executed!")
 		#Get list of viewers (async)
 		#Open database and assign points to viewers
-		viewers = []
+		viewers = ["Flaganti","BotTest"]
 		give_points(viewers)
 		point_timer = time.time()
 
@@ -99,13 +100,18 @@ def give_points(viewers):
 	try:
 		conn = sqlite3.connect('pointsDB.db')
 		cursor = conn.cursor()
-		#TODO: Check if tables exists
 		for viewer in viewers:
+			print(viewer)
 			argc={'viewer':viewer,'points':config.POINTAMOUNT}
-			cursor.execute("IF NOT EXISTS(SELECT Viewer from Points WHERE Viewer = {viewer}) ".format(**argc) +
-                           "INSERT INTO Points(Viewer, Points) VALUES({viewer}, {points}) ".format(**argc)+
-                           "ELSE "+
-                           "UPDATE Points SET Viewer = {viewer}, Points = Points + {points} WHERE Viewer = {viewer}".format(**argc))
+			cursor.execute("SELECT EXISTS(SELECT Viewer from Points WHERE Viewer = '{viewer}')".format(**argc))
+			fetch, = cursor.fetchone() #Checks if the viewer is already in the database
+			if(fetch is 0):
+				print("inserts!")
+				cursor.execute("INSERT INTO Points(Viewer, Points) VALUES('{viewer}', {points})".format(**argc))#inserts the viewer to the database
+			else:
+				print("updates!")
+				cursor.execute("UPDATE Points SET Viewer = '{viewer}', Points = Points + {points} WHERE Viewer = '{viewer}'".format(**argc)) #updates points of the viewer
+		conn.commit()
 		cursor.close()
 		conn.close()
 	except Exception as e:
@@ -139,7 +145,15 @@ def check_timers(sock): #Checks for timers
 					result = command_formatter('',key,[]) #formats result from timer
 					chat(sock, result)
 				commands.update_last_used(key)
-
+def createDBs():
+	try:
+		conn = sqlite3.connect('pointsDB.db')
+		cursor = conn.cursor()
+		cursor.execute('''CREATE TABLE Points(Viewer TEXT, Points INT)''')
+		cursor.close()
+		conn.close()
+	except Exception as e:
+		print(e)
 
 
 

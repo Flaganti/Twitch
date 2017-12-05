@@ -25,6 +25,7 @@ except Exception as e:
     print(str(e))
     connected = False #Socket failed to connect
 
+
 def bot_loop(): #TODO: Change to a queueing system so spamm gets proccessed more quickly -> Sending will be restricted to MODRATE or RATE
     while connected:
         try:
@@ -48,9 +49,10 @@ def bot_loop(): #TODO: Change to a queueing system so spamm gets proccessed more
         except Exception as e:
             utility.check_timers(s[0]) # Checks if any timers need execution
             utility.chatEnQ()
-            #utility.try_giving_points()
+            utility.try_giving_points()
             #print(e)
         #time.sleep(1 / config.MODRATE)# Not needed anymore as chatEnQ takes care of it
 
 if __name__ == "__main__":
+    utility.createDBs()
     bot_loop()
