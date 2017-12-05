@@ -2,12 +2,12 @@
 import config
 import command_functions as commands
 import time
-import threading
+
 import sqlite3
+import grequests
 
+import json
 
-
-point_timer = time.time()
 lastsent = 0
 queue = []
 def chat(sock, msg):
@@ -87,14 +87,21 @@ def func_command(sock, username, message):
 
 
 def try_giving_points():
-	global point_timer
-	if(time.time() - point_timer >= config.TIMERFORPOINTS):
-		print("Executed!")
-		#Get list of viewers (async)
-		#Open database and assign points to viewers
-		viewers = ["Flaganti","BotTest"]
+
+	try:
+		req = grequests.get(config.VIEWERAPI)
+		res = grequests.map([req])
+
+		viewersDict = json.loads(res[0].content)
+		viewers = viewersDict['chatters']['moderators']
+		viewers.extend(viewersDict['chatters']['staff'])
+		viewers.extend(viewersDict['chatters']['admins'])
+		viewers.extend(viewersDict['chatters']['global_mods'])
+		viewers.extend(viewersDict['chatters']['viewers'])
+
 		give_points(viewers)
-		point_timer = time.time()
+	except Exception as e:
+		print(e)
 
 def give_points(viewers):
 	try:
@@ -106,10 +113,10 @@ def give_points(viewers):
 			cursor.execute("SELECT EXISTS(SELECT Viewer from Points WHERE Viewer = '{viewer}')".format(**argc))
 			fetch, = cursor.fetchone() #Checks if the viewer is already in the database
 			if(fetch is 0):
-				print("inserts!")
+				#print("inserts!")
 				cursor.execute("INSERT INTO Points(Viewer, Points) VALUES('{viewer}', {points})".format(**argc))#inserts the viewer to the database
 			else:
-				print("updates!")
+				#print("updates!")
 				cursor.execute("UPDATE Points SET Viewer = '{viewer}', Points = Points + {points} WHERE Viewer = '{viewer}'".format(**argc)) #updates points of the viewer
 		conn.commit()
 		cursor.close()
