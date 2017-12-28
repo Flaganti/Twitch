@@ -50,7 +50,25 @@ commands = {
         'is_timed': 1,
         'argc':0,
         'timer_repeat': 300
+    },
+    '!giveaway':{
+        'limit':30,
+        'return':'giveaway',
+        'access': 3,
+        'argc':0
+    },
+    '!enter':{
+        'limit':0,
+        'return':'enter',
+        'access':1,
+        'argc':0
+    },
+    '!points':{
+        'limit':10,
+        'return': '/me {user} has {points} Flags',
+        'access': 0,
     }
+
 
 }
 

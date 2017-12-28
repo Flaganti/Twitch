@@ -54,6 +54,14 @@ def check_returns_function(command): #Check if the command return as fucntion
 	if commands[command]['return'] == 'command':
 		return True
 
+def check_returns_giveaway(command):
+	if commands[command]['return'] == 'giveaway':
+		return True
+
+def check_returns_enter(command):
+	if commands[command]['return']  == 'enter':
+		return True
+
 def get_user_level(username): #TODO: Get user access level
 	return 4
 

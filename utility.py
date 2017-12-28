@@ -8,18 +8,21 @@ import grequests
 
 import json
 
+import giveaway
 lastsent = 0
 queue = []
+
 def chat(sock, msg):
 	#Queues the message
 	global queue
 	queue.append([sock,msg])
 
+# All command responses are send to a queue
 def chatEnQ(): #UnQueues the message and sends it
 	global lastsent
 	global queue
 	if (time.time()-lastsent > (1/config.MODRATE) and len(queue)>0):
-		sockthis,msgthis = queue.pop()
+		sockthis,msgthis = queue.pop(0)
 		sockthis.send(("PRIVMSG {} :{}\r\n".format(config.CHAN, msgthis)))
 		lastsent=time.time()
 
@@ -32,7 +35,7 @@ def ban(sock, user):
 	"""
 	chat(sock, ".ban {}".format(user))
 
-def timeout(sock, user, secs=600):
+def timeout(sock, user, secs=300):
 	"""
 	Time out a user for a set period of time.
 	Keyword arguments:
@@ -40,7 +43,7 @@ def timeout(sock, user, secs=600):
 	user -- the user to be timed out
 	secs -- the length of the timeout in seconds (default 600)
 	"""
-	chat(sock, ".timeout {}".format(user, secs))
+	chat(sock, "/timeout {} {}".format(user, secs))
 
 def func_command(sock, username, message):
 	if (commands.is_valid_command(message) or commands.is_valid_command(message.split(' ')[0])) and (commands.check_access_level(username,message.split(' ')[0]) or commands.check_access_level(username,message)):
@@ -65,6 +68,22 @@ def func_command(sock, username, message):
 						chat(sock, command_formatter_message(result,username))
 			else:
 				chat(sock, command_formatter_message(commands.pass_to_function(command.split(' ')[0], ('','')),username))#Print out command usage!
+		elif commands.check_returns_giveaway(command.split(' ')[0]) or commands.check_returns_enter(command.split(' ')[0]):
+			userLevel = commands.get_user_level(username)
+			args = command.split(' ')
+			if(len(args) == 1 and commands.check_returns_giveaway(command.split(' ')[0])):
+				if(giveaway.giveawayRunning):
+					chat(sock,giveaway.message)
+				else:
+					chat(sock,"/me There is currently now giveaway")
+			elif(len(args) > 1 and userLevel >= 3 and commands.check_returns_giveaway(command.split(' ')[0])):
+				giveaway.giveaway(sock,args,username)
+
+			elif(commands.check_returns_enter(command.split(' ')[0])):
+				if(giveaway.giveawayRunning):
+					giveaway.enter(username,args)
+				else:
+					timeout(sock,username,5)
 
 		else:
 			if commands.is_on_cooldown(command.split(' ')[0]):
@@ -73,7 +92,7 @@ def func_command(sock, username, message):
 				args = command.split(' ')
 				del args[0]
 				command = command.split(' ')[0]
-				print('empty')
+				#print('empty')
 				chat(sock,command_formatter(username,command,args))
 
 			elif commands.check_has_return(command):
@@ -85,7 +104,7 @@ def func_command(sock, username, message):
 				print(resp)
 				chat(sock,command_formatter(username,command,[]))
 
-
+#Region Point System
 def try_giving_points():
 
 	try:
@@ -125,18 +144,38 @@ def give_points(viewers):
 		print("Database Error: ")
 		print(e)
 
+def get_user_points(user):
+	points =0
+	try:
+		conn = sqlite3.connect('pointsDB.db')
+		cursor = conn.cursor()
+		cursor.execute("SELECT Points from Points WHERE Viewer = '{}'".format(user))
+		points, = cursor.fetchone() #Checks if the viewer is already in the database
+		print(points)
+		conn.commit()
+		cursor.close()
+		conn.close()
+	except Exception as e:
+		print("Database Error: ")
+		print(e)
+	return points
+
+#Formating
 def command_formatter_message(message,username=''):
-	argc={'user':username,'points':0}
+	points = get_user_points(username)
+	argc={'user':username,'points':points}
 	return str(message.format(**argc))
 
 def command_formatter(username,command,args): # formats the string
+	points = get_user_points(username)
 	argc={}
 	if(len(args)<1):
-		argc={'user':username,'target':username,'points':0} #creats dict
+		argc={'user':username,'target':username,'points':points} #creats dict
 	else:
-		argc={'user':username,'target':args[0],'points':0}
+		argc={'user':username,'target':args[0],'points':points}
 
 	return str(commands.get_return(command)).format(**argc) #replaces values with dict values
+
 
 
 def check_timers(sock): #Checks for timers
@@ -161,7 +200,3 @@ def createDBs():
 		conn.close()
 	except Exception as e:
 		print(e)
-
-
-
-

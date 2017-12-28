@@ -6,6 +6,7 @@ import socket
 import time
 import re
 import threading
+import giveaway
 
 point_timer = 0#time.time()
 CHAT_MSG = re.compile(r"^:\w+!\w+@\w+\.tmi\.twitch\.tv PRIVMSG #\w+ :")
@@ -46,17 +47,21 @@ def bot_loop(): #TODO: Change to a queueing system so spamm gets proccessed more
                     print(username + ": " + message+"\r\n")
                     if message.startswith("!",0,1):
                         utility.func_command(s[0],username,message)
+                    if giveaway.giveawayRunning and giveaway.isDrawn:
+                        giveaway.look_for_name(username)
                 except Exception as e:
                     print(e)
         except Exception as e:
-            global point_timer
-            utility.check_timers(s[0]) # Checks if any timers need execution
-            utility.chatEnQ()
-            if(time.time() - point_timer >= config.TIMERFORPOINTS): #Start a thread to get requests
-                t1 = threading.Thread(target=utility.try_giving_points)
-                t1.start()
-                point_timer = time.time()
-            #print(e)
+                global point_timer
+                utility.check_timers(s[0]) # Checks if any timers need execution
+                utility.chatEnQ() #If there is any messsage in the queue is dequeses it and sends it.
+                if(time.time() - point_timer >= config.TIMERFORPOINTS): #Start a thread to get requests
+                    t1 = threading.Thread(target=utility.try_giving_points)
+                    t1.start()
+                    point_timer = time.time()
+                if(giveaway.giveawayRunning):
+                    giveaway.run_timer(s[0])
+        #print(e)
         #time.sleep(1 / config.MODRATE)# Not needed anymore as chatEnQ takes care of it
 
 if __name__ == "__main__":
