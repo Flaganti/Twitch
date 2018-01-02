@@ -148,6 +148,7 @@ def give_points(viewers):
 def get_user_points(user):
 	points =0
 	try:
+		print("User: " + user)
 		conn = sqlite3.connect('pointsDB.db')
 		cursor = conn.cursor()
 		cursor.execute("SELECT Points from Points WHERE Viewer = '{}'".format(user))
