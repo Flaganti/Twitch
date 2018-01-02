@@ -54,14 +54,22 @@ def bot_loop(): #TODO: Change to a queueing system so spamm gets proccessed more
                     print(e)
         except Exception as e:
                 global point_timer
-                utility.check_timers(s[0]) # Checks if any timers need execution
-                utility.chatEnQ() #If there is any messsage in the queue is dequeses it and sends it.
-                if(time.time() - point_timer >= config.TIMERFORPOINTS): #Start a thread to get requests
-                    t1 = threading.Thread(target=utility.try_giving_points)
-                    t1.start()
-                    point_timer = time.time()
-                if(giveaway.giveawayRunning):
-                    giveaway.run_timer(s[0])
+                try:
+                    utility.check_timers(s[0]) # Checks if any timers need execution
+                    utility.chatEnQ() #If there is any messsage in the queue is dequeses it and sends it.
+                    if(time.time() - point_timer >= config.TIMERFORPOINTS): #Start a thread to get requests
+                        t1 = threading.Thread(target=utility.try_giving_points)
+                        t1.start()
+                        point_timer = time.time()
+                    if(giveaway.giveawayRunning):
+                        giveaway.run_timer(s[0])
+                except Exception as exc:
+                    print "An Error appeared in main.bot_loop.Exception timer,chatEnQ,threading,giveaway.run_timer didn't work correctly\n"
+                    print exc
+                except KeyboardInterrupt:
+                    #Make this a function to get called, so it can be called from the website as well (or restart or smth)
+                    print("^C was pressed. Do some cleanup code in here!")
+                    sys.exit()
         except KeyboardInterrupt:
             #Make this a function to get called, so it can be called from the website as well (or restart or smth)
             print("^C was pressed. Do some cleanup code in here!")
