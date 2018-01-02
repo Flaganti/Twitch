@@ -120,6 +120,7 @@ def try_giving_points():
 
 		give_points(viewers)
 	except Exception as e:
+		print("Error in utility.try_giving_points")
 		print(e)
 
 def give_points(viewers):
@@ -141,7 +142,7 @@ def give_points(viewers):
 		cursor.close()
 		conn.close()
 	except Exception as e:
-		print("Database Error: ")
+		print("In utility.give_points -> Database Error: ")
 		print(e)
 
 def get_user_points(user):
@@ -156,7 +157,7 @@ def get_user_points(user):
 		cursor.close()
 		conn.close()
 	except Exception as e:
-		print("Database Error: ")
+		print("in utility.get_user_points -> Database Error: ")
 		print(e)
 	return points
 
