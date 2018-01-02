@@ -147,19 +147,21 @@ def give_points(viewers):
 
 def get_user_points(user):
 	points =0
-	try:
-		print("User: " + user)
-		conn = sqlite3.connect('pointsDB.db')
-		cursor = conn.cursor()
-		cursor.execute("SELECT Points from Points WHERE Viewer = '{}'".format(user))
-		points, = cursor.fetchone() #Checks if the viewer is already in the database
-		print(points)
-		conn.commit()
-		cursor.close()
-		conn.close()
-	except Exception as e:
-		print("in utility.get_user_points -> Database Error: ")
-		print(e)
+	if(len(user)>0):
+		try:
+			print("User: " + user)
+			conn = sqlite3.connect('pointsDB.db')
+			cursor = conn.cursor()
+			cursor.execute("SELECT Points from Points WHERE Viewer = '{}'".format(user))
+			points, = cursor.fetchone() #Checks if the viewer is already in the database
+			print(points)
+			conn.commit()
+			cursor.close()
+			conn.close()
+		except Exception as e:
+			print("in utility.get_user_points -> Database Error: ")
+			print(e)
+		return points
 	return points
 
 #Formating
