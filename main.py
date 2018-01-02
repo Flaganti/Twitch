@@ -61,6 +61,8 @@ def bot_loop(): #TODO: Change to a queueing system so spamm gets proccessed more
                     point_timer = time.time()
                 if(giveaway.giveawayRunning):
                     giveaway.run_timer(s[0])
+        except KeyboardInterrupt:
+            print("^C was pressed. Do some cleanup code in here!")
         #print(e)
         #time.sleep(1 / config.MODRATE)# Not needed anymore as chatEnQ takes care of it
 
