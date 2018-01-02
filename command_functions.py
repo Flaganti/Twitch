@@ -48,7 +48,8 @@ def check_has_correct_args(message, command):
 
 def check_is_timed(command):
 	if 'is_timed' in commands[command]:
-		return True
+		if commands[command]['is_timed'] == 1:
+			return True
 
 def check_returns_function(command): #Check if the command return as fucntion
 	if commands[command]['return'] == 'command':

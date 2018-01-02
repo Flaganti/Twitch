@@ -47,7 +47,7 @@ commands = {
         'limit':0,
         'return':'/me This is a timer test',
         'access': 3,
-        'is_timed': 1,
+        'is_timed': 0,
         'argc':0,
         'timer_repeat': 300
     },
