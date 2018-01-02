@@ -63,6 +63,7 @@ def bot_loop(): #TODO: Change to a queueing system so spamm gets proccessed more
                 if(giveaway.giveawayRunning):
                     giveaway.run_timer(s[0])
         except KeyboardInterrupt:
+            #Make this a function to get called, so it can be called from the website as well (or restart or smth)
             print("^C was pressed. Do some cleanup code in here!")
             sys.exit()
         #print(e)
