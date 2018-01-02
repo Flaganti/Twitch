@@ -76,6 +76,7 @@ def func_command(sock, username, message):
 					chat(sock,giveaway.message)
 				else:
 					chat(sock,"/me There is currently now giveaway running.")
+
 			elif(len(args) > 1 and userLevel >= 3 and commands.check_returns_giveaway(command.split(' ')[0])):
 				giveaway.giveaway(sock,args,username)
 
