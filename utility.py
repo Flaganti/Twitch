@@ -75,7 +75,7 @@ def func_command(sock, username, message):
 				if(giveaway.giveawayRunning):
 					chat(sock,giveaway.message)
 				else:
-					chat(sock,"/me There is currently now giveaway")
+					chat(sock,"/me There is currently now giveaway running.")
 			elif(len(args) > 1 and userLevel >= 3 and commands.check_returns_giveaway(command.split(' ')[0])):
 				giveaway.giveaway(sock,args,username)
 
@@ -165,12 +165,18 @@ def get_user_points(user):
 	return points
 
 #Formating
-def command_formatter_message(message,username=''):
+
+def command_formatter_message_without_points(message,username=''): #Used for message formating( Manual strings)
+	points=0
+	argc={'user':username,'points':points}
+	return str(message.format(**argc))
+
+def command_formatter_message(message,username=''): #Used for message formating( Manual strings)
 	points = get_user_points(username)
 	argc={'user':username,'points':points}
 	return str(message.format(**argc))
 
-def command_formatter(username,command,args): # formats the string
+def command_formatter(username,command,args): # formats the string of a given command (formats the string that the command returns)
 	points = get_user_points(username)
 	argc={}
 	if(len(args)<1):

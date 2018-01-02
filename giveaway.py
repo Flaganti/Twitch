@@ -41,7 +41,7 @@ def run_timer(socket):
             was_drawn=time.time()
             isDrawn = True
 
-            utility.chat(socket,utility.command_formatter_message("/me @{user} you have won. Speak up in the next 60 seconds or be rerolled",winner))
+            utility.chat(socket,utility.command_formatter_message_without_points("/me @{user} you have won. Speak up in the next 60 seconds or be rerolled",winner))
         else:
             utility.chat(socket,"/me No one entered the giveaway.")
             giveawayRunning=False
@@ -51,7 +51,7 @@ def run_timer(socket):
         isDrawn=False
     if(hasClaimed):
         winChance = (giveEntries[winner]*1.0 / len(giveawayQueue)*1.0)*100.0
-        utility.chat(socket,utility.command_formatter_message("/me {user} has successfully claimed the prize. Win chance was %s%%" % (winChance) ,winner))
+        utility.chat(socket,utility.command_formatter_message_without_points("/me {user} has successfully claimed the prize. Win chance was %s%%" % (winChance) ,winner))
         giveawayRunning = False
         isDrawn = False
         hasClaimed = False
@@ -83,7 +83,7 @@ def giveaway(sock,args,user):
                 pointCost = arg[4]
                 timeLeft = duration/60
             except:
-                utility.chat(sock,utility.command_formatter_message(usage,user))
+                utility.chat(sock,utility.command_formatter_message_without_points(usage,user))
 
 
     elif (whatdo == "stop"): #Ends giveaway or without claiming
@@ -94,7 +94,7 @@ def giveaway(sock,args,user):
         hasClaimed=False
 
     elif (whatdo == "usage"): #Sends command usage
-        utility.chat(sock,utility.command_formatter_message(message,user))
+        utility.chat(sock,utility.command_formatter_message_without_points(usage,user))
 
     elif (whatdo == "draw"): #TODO: update this :)
         if(giveawayRunning):
