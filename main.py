@@ -7,6 +7,7 @@ import time
 import re
 import threading
 import giveaway
+import sys
 
 point_timer = 0#time.time()
 CHAT_MSG = re.compile(r"^:\w+!\w+@\w+\.tmi\.twitch\.tv PRIVMSG #\w+ :")
@@ -63,6 +64,7 @@ def bot_loop(): #TODO: Change to a queueing system so spamm gets proccessed more
                     giveaway.run_timer(s[0])
         except KeyboardInterrupt:
             print("^C was pressed. Do some cleanup code in here!")
+            sys.exit()
         #print(e)
         #time.sleep(1 / config.MODRATE)# Not needed anymore as chatEnQ takes care of it
 
