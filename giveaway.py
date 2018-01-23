@@ -33,7 +33,7 @@ def run_timer(socket):
         if(timeLeft == -1):
             utility.chat(socket,message)
         elif(timeLeft != 0):
-            utility.chat(socket,message+". Giveaway ends in %s minutes. Current entries %s" % (timeLeft,len(giveawayQueue)))
+            utility.chat(socket,message+". Type !enter to join. Giveaway ends in %s minutes. Current entries %s." % (timeLeft,len(giveawayQueue)))
             timeLeft-=1
     if(isDrawn==False and (time.time() - giveawayStarted >= duration)):
         if(len(giveawayQueue) >0):
@@ -51,7 +51,7 @@ def run_timer(socket):
         isDrawn=False
     if(hasClaimed):
         winChance = (giveEntries[winner]*1.0 / len(giveawayQueue)*1.0)*100.0
-        utility.chat(socket,utility.command_formatter_message_without_points("/me {user} has successfully claimed the prize. Win chance was %s%%" % (winChance) ,winner))
+        utility.chat(socket,utility.command_formatter_message_without_points("/me {user} has successfully claimed the prize. Win chance was %.2f%%." % (winChance) ,winner))
         giveawayRunning = False
         isDrawn = False
         hasClaimed = False
@@ -104,6 +104,7 @@ def giveaway(sock,args,user):
             utility.chat(sock,"/me Cannot draw giveaway winner if giveaway isn't running.")
 
 #TODO: Add POINTS INTO THE MIX
+#TODO: If points are 0, don't check for them!
 def enter(user,args):
     del args[0]
     points = utility.get_user_points(user)
