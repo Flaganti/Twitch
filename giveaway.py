@@ -43,15 +43,15 @@ def run_timer(socket):
 
             utility.chat(socket,utility.command_formatter_message_without_points("/me @{user} you have won. Speak up in the next 60 seconds or be rerolled",winner))
         else:
-            utility.chat(socket,"/me No one entered the giveaway.")
+            utility.chat(socket, "/me No one entered the giveaway.")
             giveawayRunning=False
 
     if(hasClaimed==False and time.time()-was_drawn >= claimTimer and was_drawn != 0):
-        utility.chat(socket,"/me Rerolling")
+        utility.chat(socket,"/me Re-rolling")
         isDrawn=False
     if(hasClaimed):
         winChance = (giveEntries[winner]*1.0 / len(giveawayQueue)*1.0)*100.0
-        utility.chat(socket,utility.command_formatter_message_without_points("/me {user} has successfully claimed the prize. Win chance was %.2f%%." % (winChance) ,winner))
+        utility.chat(socket,utility.command_formatter_message_without_points("/me {user} has successfully claimed the prize. Win chance was %.2f%%." % (winChance),winner))
         giveawayRunning = False
         isDrawn = False
         hasClaimed = False
