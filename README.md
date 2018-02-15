@@ -15,17 +15,16 @@ Or if you know some python you can add commands in the command_headers.py
             'limit': 0,                    ->   time limit in seconds
             'argc': 0,                     ->   number of arguments needed -> only used for commands with return value of 'command'
             'return': 'This is a test'     ->   return value, if 'command' -> execute command in commands
-            'access': [0,1,2,3,4]
+            'access': [0,1,2,3]
             'is_timed': 0,1                ->   0 no, 1 yes
             'timer_repeat': 300            ->   time in seconds
         }
     }
     Access Levels:
     0 -> Everyone
-    1 -> Regular
-    2 -> Subscriber
-    3 -> Moderator
-    4 -> Owner
+    1 -> Subscriber
+    2 -> Moderator
+    3 -> Owner
     
 if you used 'command' as the return value
 create your own python file and put it into the commands [folder](https://github.com/Flaganti/Twitch/blob/master/commands/)

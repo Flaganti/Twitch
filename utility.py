@@ -105,7 +105,7 @@ def func_command(sock, username, message):
 				print(resp)
 				chat(sock,command_formatter(username,command,[]))
 
-#Region Point System
+#Point System
 def try_giving_points():
 
 	try:
@@ -125,6 +125,7 @@ def try_giving_points():
 		print(e)
 
 def give_points(viewers):
+	#TODO: Subs get more points
 	try:
 		conn = sqlite3.connect('pointsDB.db')
 		cursor = conn.cursor()
