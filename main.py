@@ -46,6 +46,7 @@ def bot_loop(): #TODO: Change to a queueing system so spamm gets proccessed more
                     if response.startswith("@"):
                         tags, response = response.split(" ",1)
                     #print(response+"\r\n")
+
                     username = re.search(r"\w+", response).group(0)
                     message = CHAT_MSG.sub("", response)
                     print("TAGS:"+tags+ "\n" +username + ": " + message+"\r\n")
