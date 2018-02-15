@@ -21,7 +21,7 @@ try:
 
     s[0].send("CAP REQ :twitch.tv/membership\r\n".encode("utf-8"))
     s[0].send("CAP REQ :twitch.tv/commands\r\n".encode("utf-8"))
-    s[0].send("CAP REQ :twitch.tv/tags\r\n".encode("utf-8")) #Needs re changing! so it can read tags
+    #s[0].send("CAP REQ :twitch.tv/tags\r\n".encode("utf-8")) #Needs re changing! so it can read tags
     s[0].send("JOIN {}\r\n".format(config.CHAN).encode("utf-8"))
     s[0].settimeout(0) #Set timeout for socket
     connected = True #Socket successfully connected
@@ -46,7 +46,6 @@ def bot_loop(): #TODO: Change to a queueing system so spamm gets proccessed more
                     if response.startswith("@"):
                         tags, response = response.split(" ",1)
                     #print(response+"\r\n")
-
                     username = re.search(r"\w+", response).group(0)
                     message = CHAT_MSG.sub("", response)
                     print("TAGS:"+tags+ "\n" +username + ": " + message+"\r\n")
