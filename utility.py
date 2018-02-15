@@ -45,8 +45,8 @@ def timeout(sock, user, secs=300):
 	"""
 	chat(sock, "/timeout {} {}".format(user, secs))
 
-def func_command(sock, username, message):
-	if (commands.is_valid_command(message) or commands.is_valid_command(message.split(' ')[0])) and (commands.check_access_level(username,message.split(' ')[0]) or commands.check_access_level(username,message)):
+def func_command(sock, username,tags, message):
+	if (commands.is_valid_command(message) or commands.is_valid_command(message.split(' ')[0])) and (commands.check_access_level(tags,message.split(' ')[0]) or commands.check_access_level(tags,message)):
 		command = message
 		if commands.check_returns_function(command.split(' ')[0]):
 			if commands.check_has_correct_args(command, command.split(' ')[0]): #TODO: CHANGE this or ANND QUERRY FLAG TO FUNCTION
@@ -105,7 +105,7 @@ def func_command(sock, username, message):
 				print(resp)
 				chat(sock,command_formatter(username,command,[]))
 
-#Region Point System
+#Point System
 def try_giving_points():
 
 	try:
@@ -125,6 +125,7 @@ def try_giving_points():
 		print(e)
 
 def give_points(viewers):
+	#TODO: Subs get more points
 	try:
 		conn = sqlite3.connect('pointsDB.db')
 		cursor = conn.cursor()
@@ -142,6 +143,7 @@ def give_points(viewers):
 		conn.commit()
 		cursor.close()
 		conn.close()
+		print("\n")
 	except Exception as e:
 		print("In utility.give_points -> Database Error: ")
 		print(e)
@@ -155,7 +157,7 @@ def get_user_points(user):
 			cursor = conn.cursor()
 			cursor.execute("SELECT Points from Points WHERE Viewer = '{}'".format(user))
 			points, = cursor.fetchone() #Checks if the viewer is already in the database
-			print(points)
+			print("Points: {} \n".format(points))
 			conn.commit()
 			cursor.close()
 			conn.close()

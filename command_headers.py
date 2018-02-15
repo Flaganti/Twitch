@@ -10,10 +10,9 @@
 #    }
 # Access Levels:
 #   0 -> Everyone
-#   1 -> Regular
-#   2 -> Subscriber
-#   3 -> Moderator
-#   4 -> Owner
+#   1 -> Subscriber
+#   2 -> Moderator
+#   3 -> Owner
 #
 
 #TODO: Make this a SQL database
