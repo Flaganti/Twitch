@@ -53,13 +53,13 @@ commands = {
     '!giveaway':{
         'limit':30,
         'return':'giveaway',
-        'access': 3,
+        'access': 2,
         'argc':0
     },
     '!enter':{
         'limit':0,
         'return':'enter',
-        'access':1,
+        'access':0,
         'argc':0
     },
     '!points':{

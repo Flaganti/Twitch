@@ -54,6 +54,6 @@ create your own python file and put it into the commands [folder](https://github
 * Timers
 * Point system (partialy)
 ### To be implamented
-* Moderation support
+* Moderation support 
 * Point system (partialy)
 * Webserver for Point store

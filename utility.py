@@ -68,8 +68,9 @@ def func_command(sock, username,tags, message):
 						chat(sock, command_formatter_message(result,username))
 			else:
 				chat(sock, command_formatter_message(commands.pass_to_function(command.split(' ')[0], ('','')),username))#Print out command usage!
+
 		elif commands.check_returns_giveaway(command.split(' ')[0]) or commands.check_returns_enter(command.split(' ')[0]):
-			userLevel = commands.get_user_level(username)
+			userLevel = commands.get_user_level(tags)
 			args = command.split(' ')
 			if(len(args) == 1 and commands.check_returns_giveaway(command.split(' ')[0])):
 				if(giveaway.giveawayRunning):
@@ -77,12 +78,12 @@ def func_command(sock, username,tags, message):
 				else:
 					chat(sock,"/me No giveaway running at this moment.")
 
-			elif(len(args) > 1 and userLevel >= 3 and commands.check_returns_giveaway(command.split(' ')[0])):
+			elif(len(args) > 1 and userLevel >= 2 and commands.check_returns_giveaway(command.split(' ')[0])):
 				giveaway.giveaway(sock,args,username)
 
 			elif(commands.check_returns_enter(command.split(' ')[0])):
 				if(giveaway.giveawayRunning):
-					giveaway.enter(username,args)
+					giveaway.enter(sock,username,userLevel,args)
 				else:
 					timeout(sock,username,5)
 

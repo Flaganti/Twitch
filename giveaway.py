@@ -71,7 +71,7 @@ def giveaway(sock,args,user):
 
         message+= arg[0]
         duration = 0
-        access_level = 1
+        access_level = 0
         maxEntries = 1
         pointCost = 0
         timeLeft = -1
@@ -105,9 +105,12 @@ def giveaway(sock,args,user):
 
 #TODO: Add POINTS INTO THE MIX
 #TODO: If points are 0, don't check for them!
-def enter(user,args):
+def enter(sock,user,level,args):
     del args[0]
     points = utility.get_user_points(user)
+    if(level < access_level):
+        #utility.chat(sock,utility.command_formatter_message_without_points("Sorry {user} your rank is too low to enter the giveaway.",user))
+        return
     if((user in giveEntries.keys()) == False):
         if(len(args) == 0):
             giveEntries[user] = 1
