@@ -36,6 +36,12 @@ commands = {
         'return':"/me hugs {target} (> ˙^˙ <)",
         'access': 0
     },
+    '!followage':{
+        'limit':5,
+        'argc':0,
+        'return':'{follow}',
+        'access':0
+    },
     '!command':{
         'limit':30,
         'argc':2,

@@ -100,7 +100,7 @@ def func_command(sock, user, message):
 				del args[0]
 				command = command.split(' ')[0]
 				#print('empty')
-				chat(sock,command_formatter(username,command,args))
+				chat(sock,command_formatter(user,command,args))
 
 			elif commands.check_has_return(command):
 				print('Command is valid an not on cooldown. (%s) (%s)' % (command, username))
@@ -109,7 +109,7 @@ def func_command(sock, user, message):
 				commands.update_last_used(command)
 
 				print(resp)
-				chat(sock,command_formatter(username,command,[]))
+				chat(sock,command_formatter(user,command,[]))
 
 #Point System
 def try_giving_points():
@@ -197,23 +197,29 @@ def get_user_points(user):
 
 #Formating
 
-def command_formatter_message_without_points(message,username=''): #Used for message formating( Manual strings)
+def command_formatter_message_without_points(message,username): #Used for message formating( Manual strings)
 	points=0
 	argc={'user':username,'points':points}
 	return str(message.format(**argc))
 
-def command_formatter_message(message,username=''): #Used for message formating( Manual strings)
+def command_formatter_message(message,username): #Used for message formating( Manual strings)
 	points = get_user_points(username)
 	argc={'user':username,'points':points}
 	return str(message.format(**argc))
 
-def command_formatter(username,command,args): # formats the string of a given command (formats the string that the command returns)
+def command_formatter(user,command,args): # formats the string of a given command (formats the string that the command returns)
+	try:
+		username = user.userName
+		followage = user.get_followage()
+	except:
+		username=''
+		followage=''
 	points = get_user_points(username)
 	argc={}
 	if(len(args)<1):
-		argc={'user':username,'target':username,'points':points} #creats dict
+		argc={'user':username,'target':username,'points':points,'follow':followage} #creats dict
 	else:
-		argc={'user':username,'target':args[0],'points':points}
+		argc={'user':username,'target':args[0],'points':points,'follow':followage}
 
 	return str(commands.get_return(command)).format(**argc) #replaces values with dict values
 

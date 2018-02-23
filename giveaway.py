@@ -111,7 +111,7 @@ def giveaway(sock,args,user):
 #TODO: If points are 0, don't check for them!
 def enter(sock,user,args):
     del args[0]
-    follow = user.get_user_followage()
+    follow = user.is_follower()
     level = user.get_user_level()
     user = user.userName
     numOfEntries = 1
