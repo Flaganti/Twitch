@@ -2,6 +2,8 @@
 import utility
 import random
 import time
+import config
+from user_functions import *
 
 
 giveawayRunning = False
@@ -107,8 +109,11 @@ def giveaway(sock,args,user):
 
 #TODO: Add POINTS INTO THE MIX
 #TODO: If points are 0, don't check for them!
-def enter(sock,user,level,args,follow):
+def enter(sock,user,args):
     del args[0]
+    follow = user.get_user_followage()
+    level = user.get_user_level()
+    user = user.userName
     numOfEntries = 1
     try:
         if(len(args) > 0):
@@ -121,8 +126,9 @@ def enter(sock,user,level,args,follow):
     except:
         points = 0
 
-    if(follow==False or (time.time()-utility.convert_enddate_to_seconds(follow))<600):
-        return
+    if(config.FOLLOW_REQ == True):
+        if((follow==False or (time.time()-utility.convert_enddate_to_seconds(follow))<600)):
+            return
     if(level < access_level):
         #utility.chat(sock,utility.command_formatter_message_without_points("Sorry {user} your rank is too low to enter the giveaway.",user))
         return

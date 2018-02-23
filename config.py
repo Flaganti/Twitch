@@ -8,4 +8,5 @@ MODRATE = (100/30) # 100 messages in 30 seconds
 POINTAMOUNT = 100 #How many points you get
 TIMERFORPOINTS = 20*60 #How often you get the points in seconds
 VIEWERAPI = "https://tmi.twitch.tv/group/user/{}/chatters".format(CHAN[1:])
+FOLLOW_REQ = False
 BAN_PAT=[]

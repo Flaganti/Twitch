@@ -4,6 +4,7 @@ import command_functions as commands
 import datetime,time
 import sqlite3
 import grequests
+from user_functions import UserClass
 
 import json
 
@@ -44,10 +45,11 @@ def timeout(sock, user, secs=300):
 	"""
 	chat(sock, "/timeout {} {}".format(user, secs))
 
-def func_command(sock, username,tags, message):
-	if (commands.is_valid_command(message) or commands.is_valid_command(message.split(' ')[0])) and (commands.check_access_level(tags,message.split(' ')[0]) or commands.check_access_level(tags,message)):
+def func_command(sock, user, message):
+	userLevel = user.get_user_level()
+	username = user.userName
+	if (commands.is_valid_command(message) or commands.is_valid_command(message.split(' ')[0])) and (commands.check_access_level(userLevel,message.split(' ')[0]) or commands.check_access_level(userLevel,message)):
 		command = message
-		userLevel = commands.get_user_level(tags)
 		if commands.check_returns_function(command.split(' ')[0]):
 			if commands.check_has_correct_args(command, command.split(' ')[0]): #TODO: CHANGE this or ANND QUERRY FLAG TO FUNCTION
 				args = command.split(' ')
@@ -55,7 +57,7 @@ def func_command(sock, username,tags, message):
 				command = command.split(' ')[0]
 
 				if commands.is_on_cooldown(command):
-					print('Command is on cooldown. (%s) (%s) (%ss remaining)' % (command, username, commands.get_cooldown_remaining(command)))
+					print('Command is on cooldown. (%s) (%s) (%ss remaining)' % (command,username, commands.get_cooldown_remaining(command)))
 
 				else:
 					print('Command is valid an not on cooldown. (%s) (%s)' % (command, username))
@@ -63,28 +65,30 @@ def func_command(sock, username,tags, message):
 					commands.update_last_used(command)
 
 					if result:
-						resp = '@%s > %s' % (username, result)
+						resp = '@%s > %s' % (user.username, result)
 						print(resp)
 						chat(sock, command_formatter_message(result,username))
 			else:
 				chat(sock, command_formatter_message(commands.pass_to_function(command.split(' ')[0], ('','')),username))#Print out command usage!
 
-		elif commands.check_returns_giveaway(command.split(' ')[0]) or commands.check_returns_enter(command.split(' ')[0]):
+		elif commands.check_returns_giveaway(command.split(' ')[0]) or commands.check_returns_enter(command.split(' ')[0]): ##GIVEAWY COMMAND SECTION
 
 			args = command.split(' ')
 			if(len(args) == 1 and commands.check_returns_giveaway(command.split(' ')[0])):
+				if commands.is_on_cooldown(command.split(' ')[0]):
+					return
 				if(giveaway.giveawayRunning):
 					chat(sock,giveaway.message)
+					commands.update_last_used(command.split(' ')[0])
 				else:
 					chat(sock,"/me No giveaway running at this moment.")
-
+					commands.update_last_used(command.split(' ')[0])
 			elif(len(args) > 1 and userLevel >= 2 and commands.check_returns_giveaway(command.split(' ')[0])):
 				giveaway.giveaway(sock,args,username)
-
 			elif(commands.check_returns_enter(command.split(' ')[0])):
 
 				if(giveaway.giveawayRunning):
-					giveaway.enter(sock,username,userLevel,args,get_user_follow_age(tags))
+					giveaway.enter(sock,user,args)
 				else:
 					timeout(sock,username,5)
 
@@ -213,8 +217,6 @@ def command_formatter(username,command,args): # formats the string of a given co
 
 	return str(commands.get_return(command)).format(**argc) #replaces values with dict values
 
-
-
 def check_timers(sock): #Checks for timers
 	command = commands.return_commands()
 	for key in command:
@@ -239,17 +241,7 @@ def createDBs():
 		print(e)
 
 ################################
-def get_user_follow_age(tags):
-	try:
-		badges,color,dName,emotes,id,mod,roomId,sub,timestamp,turbo,userId,userType = tags[1:].split(";")
-		user_id=userId.split('=')[1]
-		channel_id=roomId.split('=')[1]
-		req = grequests.get("https://api.twitch.tv/kraken/users/%s/follows/channels/%s"%(user_id,'30628192'),headers = {'Client-ID':'jktjplv8zqdnj0xbn3i8gag8y7tzg3','Accept':'application/vnd.twitchtv.v5+json'})
-		res = grequests.map([req])
-		viewersDict = json.loads(res[0].content)
-		return viewersDict["created_at"]
-	except Exception as e:
-		return False
+
 def convert_enddate_to_seconds(ts):
 	try:
 		utc_dt = datetime.datetime.strptime(ts, '%Y-%m-%dT%H:%M:%SZ')

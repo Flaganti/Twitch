@@ -8,6 +8,7 @@ import re
 import threading
 import giveaway
 import sys
+from user_functions import UserClass
 
 point_timer = 0#time.time()
 CHAT_MSG = re.compile(r"^:\w+!\w+@\w+\.tmi\.twitch\.tv PRIVMSG #\w+ :")
@@ -21,7 +22,7 @@ try:
 
     s[0].send("CAP REQ :twitch.tv/membership\r\n".encode("utf-8"))
     s[0].send("CAP REQ :twitch.tv/commands\r\n".encode("utf-8"))
-    s[0].send("CAP REQ :twitch.tv/tags\r\n".encode("utf-8")) #Needs re changing! so it can read tags
+    s[0].send("CAP REQ :twitch.tv/tags\r\n".encode("utf-8"))
     s[0].send("JOIN {}\r\n".format(config.CHAN).encode("utf-8"))
     s[0].settimeout(0) #Set timeout for socket
     connected = True #Socket successfully connected
@@ -51,7 +52,9 @@ def bot_loop(): #TODO: Change to a queueing system so spamm gets proccessed more
                     message = CHAT_MSG.sub("", response)
                     print("TAGS:"+tags+ "\n" +username + ": " + message+"\r\n")
                     if message.startswith("!",0,1):
-                        utility.func_command(s[0],username,tags,message)
+                        user = UserClass(tags,username)
+                        utility.func_command(s[0],user,message)
+                        del user
                     if giveaway.giveawayRunning and giveaway.isDrawn:
                         giveaway.look_for_name(username)
                 except Exception as e:

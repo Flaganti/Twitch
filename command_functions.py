@@ -63,24 +63,8 @@ def check_returns_enter(command):
 	if commands[command.lower()]['return']  == 'enter':
 		return True
 
-def get_user_level(tags): #Get user level from tags -> Some tags are irrelevant
-	userLevel = 0
-	badges,color,dName,emotes,id,mod,roomId,sub,timestamp,turbo,userId,userType = tags[1:].split(";")
-
-	mod=mod.split("=")[1]
-	sub=sub.split("=")[1]
-
-	if(sub=="1"):
-		userLevel=1
-	if(mod=="1"):
-		userLevel=2
-	if("broadcaster" in badges):
-		userLevel=3
-	#print("UserLevel: {}".format(userLevel))
-	return userLevel
-
-def check_access_level(tags,command):
-	if(get_user_level(tags) >= commands[command.lower()]['access'] ):
+def check_access_level(level,command):
+	if(level >= commands[command.lower()]['access'] ):
 		return True
 
 def pass_to_function(command, args): #Passes the arguments to a seperate function
