@@ -53,7 +53,7 @@ commands = {
     '!giveaway':{
         'limit':30,
         'return':'giveaway',
-        'access': 2,
+        'access': 0,
         'argc':0
     },
     '!enter':{

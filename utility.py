@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 import config
 import command_functions as commands
-import time
-
+import datetime,time
 import sqlite3
 import grequests
 
@@ -48,6 +47,7 @@ def timeout(sock, user, secs=300):
 def func_command(sock, username,tags, message):
 	if (commands.is_valid_command(message) or commands.is_valid_command(message.split(' ')[0])) and (commands.check_access_level(tags,message.split(' ')[0]) or commands.check_access_level(tags,message)):
 		command = message
+		userLevel = commands.get_user_level(tags)
 		if commands.check_returns_function(command.split(' ')[0]):
 			if commands.check_has_correct_args(command, command.split(' ')[0]): #TODO: CHANGE this or ANND QUERRY FLAG TO FUNCTION
 				args = command.split(' ')
@@ -70,7 +70,7 @@ def func_command(sock, username,tags, message):
 				chat(sock, command_formatter_message(commands.pass_to_function(command.split(' ')[0], ('','')),username))#Print out command usage!
 
 		elif commands.check_returns_giveaway(command.split(' ')[0]) or commands.check_returns_enter(command.split(' ')[0]):
-			userLevel = commands.get_user_level(tags)
+
 			args = command.split(' ')
 			if(len(args) == 1 and commands.check_returns_giveaway(command.split(' ')[0])):
 				if(giveaway.giveawayRunning):
@@ -82,8 +82,9 @@ def func_command(sock, username,tags, message):
 				giveaway.giveaway(sock,args,username)
 
 			elif(commands.check_returns_enter(command.split(' ')[0])):
+
 				if(giveaway.giveawayRunning):
-					giveaway.enter(sock,username,userLevel,args)
+					giveaway.enter(sock,username,userLevel,args,get_user_follow_age(tags))
 				else:
 					timeout(sock,username,5)
 
@@ -120,12 +121,34 @@ def try_giving_points():
 		viewers.extend(viewersDict['chatters']['global_mods'])
 		viewers.extend(viewersDict['chatters']['viewers'])
 
-		give_points(viewers)
+		give_points_all(viewers)
 	except Exception as e:
 		print("Error in utility.try_giving_points")
 		print(e)
+def take_points(viewer, howMuch): #Takes a certian amout of points from a specific viewer
+	try:
+		conn = sqlite3.connect('pointsDB.db')
+		cursor = conn.cursor()
 
-def give_points(viewers):
+		print(viewer)
+		argc={'viewer':viewer,'points':howMuch}
+		#cursor.execute("SELECT EXISTS(SELECT Viewer from Points WHERE Viewer = '{viewer}')".format(**argc))
+		#fetch, = cursor.fetchone() #Checks if the viewer is already in the database
+		#if(fetch is 0):
+		#	#print("inserts!")
+		#	cursor.execute("INSERT INTO Points(Viewer, Points) VALUES('{viewer}', {points})".format(**argc))#inserts the viewer to the database
+		#else:
+		#	#print("updates!")
+		cursor.execute("UPDATE Points SET Viewer = '{viewer}', Points = Points - {points} WHERE Viewer = '{viewer}'".format(**argc)) #updates points of the viewer
+
+		conn.commit()
+		cursor.close()
+		conn.close()
+		print("\n")
+	except Exception as e:
+		print("In utility.take_points -> Database Error: ")
+		print(e)
+def give_points_all(viewers):
 	#TODO: Subs get more points
 	try:
 		conn = sqlite3.connect('pointsDB.db')
@@ -146,7 +169,7 @@ def give_points(viewers):
 		conn.close()
 		print("\n")
 	except Exception as e:
-		print("In utility.give_points -> Database Error: ")
+		print("In utility.give_points_all -> Database Error: ")
 		print(e)
 
 def get_user_points(user):
@@ -214,3 +237,26 @@ def createDBs():
 		conn.close()
 	except Exception as e:
 		print(e)
+
+################################
+def get_user_follow_age(tags):
+	try:
+		badges,color,dName,emotes,id,mod,roomId,sub,timestamp,turbo,userId,userType = tags[1:].split(";")
+		user_id=userId.split('=')[1]
+		channel_id=roomId.split('=')[1]
+		req = grequests.get("https://api.twitch.tv/kraken/users/%s/follows/channels/%s"%(user_id,'30628192'),headers = {'Client-ID':'jktjplv8zqdnj0xbn3i8gag8y7tzg3','Accept':'application/vnd.twitchtv.v5+json'})
+		res = grequests.map([req])
+		viewersDict = json.loads(res[0].content)
+		return viewersDict["created_at"]
+	except Exception as e:
+		return False
+def convert_enddate_to_seconds(ts):
+	try:
+		utc_dt = datetime.datetime.strptime(ts, '%Y-%m-%dT%H:%M:%SZ')
+		# Convert UTC datetime to seconds since the Epoch
+		timestamp = (utc_dt - datetime.datetime(1970, 1, 1)).total_seconds()
+		#smth = (datetime.datetime.utcnow() - utc_dt).month
+		#print(smth)
+		return timestamp
+	except:
+		return time.time()

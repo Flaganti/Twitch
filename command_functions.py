@@ -76,7 +76,7 @@ def get_user_level(tags): #Get user level from tags -> Some tags are irrelevant
 		userLevel=2
 	if("broadcaster" in badges):
 		userLevel=3
-	print("UserLevel: {}".format(userLevel))
+	#print("UserLevel: {}".format(userLevel))
 	return userLevel
 
 def check_access_level(tags,command):

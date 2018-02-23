@@ -3,6 +3,7 @@ import utility
 import random
 import time
 
+
 giveawayRunning = False
 isDrawn = False
 hasClaimed = False
@@ -52,6 +53,7 @@ def run_timer(socket):
     if(hasClaimed):
         winChance = (giveEntries[winner]*1.0 / len(giveawayQueue)*1.0)*100.0
         utility.chat(socket,utility.command_formatter_message_without_points("/me {user} has successfully claimed the prize. Win chance was %.2f%%." % (winChance),winner))
+        utility.take_points(winner,giveEntries[winner]*pointCost)
         giveawayRunning = False
         isDrawn = False
         hasClaimed = False
@@ -60,8 +62,8 @@ def run_timer(socket):
 def giveaway(sock,args,user):
     global giveawayRunning,winner, isDrawn,hasClaimed,pointCost,maxEntries,message,duration,giveawayStarted,access_level,timeLeft
     del args[0]
-    whatdo = args[0]
-    if (whatdo == "start"): #Start Giveaway
+    doWhat = args[0]
+    if (doWhat == "start"): #Start Giveaway
         del args[0]
         str = " ".join(args)
         arg = str.split("|")
@@ -86,17 +88,17 @@ def giveaway(sock,args,user):
                 utility.chat(sock,utility.command_formatter_message_without_points(usage,user))
 
 
-    elif (whatdo == "stop"): #Ends giveaway or without claiming
+    elif (doWhat == "stop"): #Ends giveaway or without claiming
         if(giveawayRunning):
             utility.chat(sock,"/me Giveaway has ended. No winners choosen.")
         giveawayRunning = False
         isDrawn=False
         hasClaimed=False
 
-    elif (whatdo == "usage"): #Sends command usage
+    elif (doWhat == "usage"): #Sends command usage
         utility.chat(sock,utility.command_formatter_message_without_points(usage,user))
 
-    elif (whatdo == "draw"): #TODO: update this :)
+    elif (doWhat == "draw"): #TODO: update this :)
         if(giveawayRunning):
             winner = random.choice(giveawayQueue)
             isDrawn = True
@@ -105,11 +107,29 @@ def giveaway(sock,args,user):
 
 #TODO: Add POINTS INTO THE MIX
 #TODO: If points are 0, don't check for them!
-def enter(sock,user,level,args):
+def enter(sock,user,level,args,follow):
     del args[0]
-    points = utility.get_user_points(user)
+    numOfEntries = 1
+    try:
+        if(len(args) > 0):
+            numOfEntries = int(args[0])
+    except:
+        numOfEntries = 1
+
+    try:
+        points = utility.get_user_points(user)
+    except:
+        points = 0
+
+    if(follow==False or (time.time()-utility.convert_enddate_to_seconds(follow))<600):
+        return
     if(level < access_level):
         #utility.chat(sock,utility.command_formatter_message_without_points("Sorry {user} your rank is too low to enter the giveaway.",user))
+        return
+    if(numOfEntries > maxEntries):
+        numOfEntries = maxEntries
+    if((points < pointCost * numOfEntries) and pointCost != 0):
+        #utility.chat(sock,utility.command_formatter_message_without_points("Sorry {user}, you don't have enough points to enter the giveaway.",user))
         return
     if((user in giveEntries.keys()) == False):
         if(len(args) == 0):
@@ -117,15 +137,9 @@ def enter(sock,user,level,args):
             giveawayQueue.append(user)
             enteredQueue.append(user)
         elif(len(args) > 0):
-            try:
-                num = int(args[0])
-            except:
-                num = 1
-            if(num > maxEntries):
-                num=maxEntries
-            giveEntries[user] = num
+            giveEntries[user] = numOfEntries
             enteredQueue.append(user)
-            for x in range (0, num):
+            for x in range (0, numOfEntries):
                 giveawayQueue.append(user)
 
 def look_for_name(username):
