@@ -30,7 +30,7 @@ timeLeft = -1
 usage = "/me {user} -> !giveaway [start|stop|usage|draw] [Whats being give away]|[Duration is minutes]|[Access Level]|[Max Entries]|[Point Cost]"
 
 def run_timer(socket):
-    global last_sent_timer,winner,isDrawn,hasClaimed,was_drawn,giveawayRunning,timeLeft,stopTimer
+    global last_sent_timer,winner,isDrawn,hasClaimed,was_drawn,giveawayRunning,timeLeft,stopTimer,giveawayQueue
     if(time.time() - last_sent_timer >= 60):
         last_sent_timer=time.time()
         if(timeLeft == -1):
@@ -41,6 +41,8 @@ def run_timer(socket):
     if(isDrawn==False and (time.time() - giveawayStarted >= duration)):
         if(len(giveawayQueue) >0):
             winner = random.choice(giveawayQueue)
+            #if(remove winner from queue = true)
+            giveawayQueue = remove_values_from_list(giveawayQueue,winner)
             was_drawn=time.time()
             isDrawn = True
 
@@ -112,7 +114,9 @@ def giveaway(sock,args,user):
 def enter(sock,user,args):
     del args[0]
     follow = user.is_follower()
-    level = user.get_user_level()
+    level = 0
+    if(access_level == 0):
+        level = user.get_user_level()
     user = user.userName
     numOfEntries = 1
     try:
@@ -152,3 +156,6 @@ def look_for_name(username):
     global hasClaimed
     if winner == username:
         hasClaimed=True
+
+def remove_values_from_list(the_list, val):
+   return [value for value in the_list if value != val]
