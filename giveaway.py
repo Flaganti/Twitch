@@ -84,9 +84,9 @@ def giveaway(sock,args,user):
         if(len(arg) > 0):
             try:
                 duration = int(arg[1])*60
-                access_level = arg[2]
-                maxEntries = arg[3]
-                pointCost = arg[4]
+                access_level = int(arg[2])
+                maxEntries = int(arg[3])
+                pointCost = int(arg[4])
                 timeLeft = duration/60
             except:
                 utility.chat(sock,utility.command_formatter_message_without_points(usage,user))
@@ -131,17 +131,22 @@ def enter(sock,user,args):
         points = 0
 
     if(config.FOLLOW_REQ == True):
+        print("stopped here")
         if((follow==False or (time.time()-utility.convert_enddate_to_seconds(follow))<600)):
             return
-    if(level < access_level):
+    if(level < access_level): #this fucks up 0 < 0 == true ... what?
+        print("access level %s %s" % (access_level,level))
         #utility.chat(sock,utility.command_formatter_message_without_points("Sorry {user} your rank is too low to enter the giveaway.",user))
         return
     if(numOfEntries > maxEntries):
+        print("numentries")
         numOfEntries = maxEntries
-    if((points < pointCost * numOfEntries) and pointCost != 0):
+    if((points < pointCost * numOfEntries) and pointCost != 0): #this fucks up
+        print("points fcked up")
         #utility.chat(sock,utility.command_formatter_message_without_points("Sorry {user}, you don't have enough points to enter the giveaway.",user))
         return
     if((user in giveEntries.keys()) == False):
+        print("user was entered to the giveaway.")
         if(len(args) == 0):
             giveEntries[user] = 1
             giveawayQueue.append(user)

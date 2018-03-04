@@ -46,7 +46,7 @@ commands = {
         'limit':30,
         'argc':2,
         'return':"command",
-        'access': 3
+        'access': 2
     },
     '!tt':{
         'limit':0,

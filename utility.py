@@ -62,10 +62,11 @@ def func_command(sock, user, message):
 				else:
 					print('Command is valid an not on cooldown. (%s) (%s)' % (command, username))
 					result = commands.pass_to_function(command, args)
+					print("command resault was posted back")
 					commands.update_last_used(command)
 
 					if result:
-						resp = '@%s > %s' % (user.username, result)
+						resp = '@%s > %s' % (username, result)
 						print(resp)
 						chat(sock, command_formatter_message(result,username))
 			else:
@@ -90,7 +91,8 @@ def func_command(sock, user, message):
 				if(giveaway.giveawayRunning):
 					giveaway.enter(sock,user,args)
 				else:
-					timeout(sock,username,5)
+					#timeout(sock,username,5)
+					return
 
 		else:
 			if commands.is_on_cooldown(command.split(' ')[0]):
