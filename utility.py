@@ -21,10 +21,11 @@ def chat(sock, msg):
 def chatEnQ(): #UnQueues the message and sends it
 	global lastsent
 	global queue
-	if (time.time()-lastsent > (1/config.MODRATE) and len(queue)>0):
+	if (time.time()-lastsent > (1.0/config.RATE) and len(queue)>0):
 		sockthis,msgthis = queue.pop(0)
 		sockthis.send(("PRIVMSG {} :{}\r\n".format(config.CHAN, msgthis)))
 		lastsent=time.time()
+		#print(":sprout_bot!sprout_bot@sprout_bot.tmi.twitch.tv PRIVMSG {} :{}\r\n".format(config.CHAN, msgthis))
 
 def ban(sock, user):
 	"""

@@ -30,7 +30,7 @@ timeLeft = -1
 usage = "/me {user} -> !giveaway [start|stop|usage|draw] [Whats being give away]|[Duration is minutes]|[Access Level]|[Max Entries]|[Point Cost]"
 
 def run_timer(socket):
-    global last_sent_timer,winner,isDrawn,hasClaimed,was_drawn,giveawayRunning,timeLeft,stopTimer,giveawayQueue
+    global last_sent_timer,winner,isDrawn,hasClaimed,was_drawn,giveawayRunning,timeLeft,stopTimer,giveawayQueue,enteredQueue,giveEntries
     if(time.time() - last_sent_timer >= 60):
         last_sent_timer=time.time()
         if(timeLeft == -1):
@@ -38,7 +38,13 @@ def run_timer(socket):
         elif(timeLeft != 0):
             utility.chat(socket,message+". Type !enter to join. Giveaway ends in %s minutes. Current entries %s." % (timeLeft,len(giveawayQueue)))
             timeLeft-=1
+
+    if(hasClaimed==False and time.time()-was_drawn >= claimTimer and was_drawn != 0):
+        utility.chat(socket,"/me Re-rolling")
+        isDrawn=False
+
     if(isDrawn==False and (time.time() - giveawayStarted >= duration)):
+        print("(%s - %s >= %s)" % (time.time(),giveawayStarted,duration))
         if(len(giveawayQueue) >0):
             winner = random.choice(giveawayQueue)
             #if(remove winner from queue = true)
@@ -51,20 +57,25 @@ def run_timer(socket):
             utility.chat(socket, "/me No one entered the giveaway.")
             giveawayRunning=False
 
-    if(hasClaimed==False and time.time()-was_drawn >= claimTimer and was_drawn != 0):
-        utility.chat(socket,"/me Re-rolling")
-        isDrawn=False
     if(hasClaimed):
-        winChance = (giveEntries[winner]*1.0 / len(giveawayQueue)*1.0)*100.0
+        winChance = 0
+        if(len(giveawayQueue)<1):
+            winChance = (giveEntries[winner]*1.0 / (len(giveawayQueue)+1)*1.0)*100.0
+        else:
+            winChance = (giveEntries[winner]*1.0 / (len(giveawayQueue))*1.0)*100.0
         utility.chat(socket,utility.command_formatter_message_without_points("/me {user} has successfully claimed the prize. Win chance was %.2f%%." % (winChance),winner))
         utility.take_points(winner,giveEntries[winner]*pointCost)
         giveawayRunning = False
         isDrawn = False
         hasClaimed = False
+        was_drawn=0
+        giveawayQueue = []
+        giveEntries = {}
+        enteredQueue = []
 
 
 def giveaway(sock,args,user):
-    global giveawayRunning,winner, isDrawn,hasClaimed,pointCost,maxEntries,message,duration,giveawayStarted,access_level,timeLeft
+    global giveawayRunning,winner, isDrawn,hasClaimed,pointCost,maxEntries,message,duration,giveawayStarted,access_level,timeLeft,was_drawn,giveawayQueue,giveEntries,enteredQueue
     del args[0]
     doWhat = args[0]
     if (doWhat == "start"): #Start Giveaway
@@ -75,6 +86,12 @@ def giveaway(sock,args,user):
         giveawayRunning = True
         giveawayStarted = time.time()
 
+        was_drawn = 0
+        enteredQueue = []
+        giveEntries = {}
+        giveawayQueue = []
+
+        was_drawn=0
         message+= arg[0]
         duration = 0
         access_level = 0
@@ -98,6 +115,7 @@ def giveaway(sock,args,user):
         giveawayRunning = False
         isDrawn=False
         hasClaimed=False
+
 
     elif (doWhat == "usage"): #Sends command usage
         utility.chat(sock,utility.command_formatter_message_without_points(usage,user))
