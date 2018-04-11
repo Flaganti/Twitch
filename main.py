@@ -7,6 +7,7 @@ import time
 import re
 import threading
 import giveaway
+import guess
 import sys
 from user_functions import UserClass
 
@@ -70,6 +71,8 @@ def bot_loop(): #TODO: Change to a queueing system so spamm gets proccessed more
                         point_timer = time.time()
                     if(giveaway.giveawayRunning):
                         giveaway.run_timer(s[0])
+                    if(guess.guessRunning):
+                        guess.timer(s[0])
                 except Exception as exc:
                     print "An Error appeared in main.bot_loop.Exception timer,chatEnQ,threading,giveaway.run_timer didn't work correctly\n"
                     print exc

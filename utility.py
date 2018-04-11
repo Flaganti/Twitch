@@ -4,11 +4,14 @@ import command_functions as commands
 import datetime,time
 import sqlite3
 import grequests
+
 from user_functions import UserClass
 
 import json
 
 import giveaway
+import guess
+
 lastsent = 0
 queue = []
 
@@ -45,7 +48,7 @@ def timeout(sock, user, secs=300):
 	secs -- the length of the timeout in seconds (default 600)
 	"""
 	chat(sock, "/timeout {} {}".format(user, secs))
-
+#TODO: guess
 def func_command(sock, user, message):
 	userLevel = user.get_user_level()
 	username = user.userName
@@ -94,7 +97,15 @@ def func_command(sock, user, message):
 				else:
 					#timeout(sock,username,5)
 					return
-
+		elif commands.check_returns_guessing(command.split(' ')[0]) or commands.check_returns_guess(command.split(' ')[0]): ##GUESSING COMMAND SECTION
+			args = command.split(' ')
+			if(len(args) > 1 and userLevel >=2 and commands.check_returns_guessing(command.split(' ')[0])):
+				guess.guessStartEnd(sock,args,user)
+			elif(commands.check_returns_guess(command.split(' ')[0])):
+				if(guess.canEnter):
+					guess.guess(sock,user,args)
+				else:
+					return
 		else:
 			if commands.is_on_cooldown(command.split(' ')[0]):
 				print('Command is on cooldown. (%s) (%s) (%ss remaining)' % (command, username, commands.get_cooldown_remaining(command)))
@@ -156,6 +167,7 @@ def take_points(viewer, howMuch): #Takes a certian amout of points from a specif
 		print("In utility.take_points -> Database Error: ")
 		print(e)
 def give_points_all(viewers):
+	print("Points are being given:")
 	#TODO: Subs get more points
 	try:
 		conn = sqlite3.connect('pointsDB.db')
@@ -178,6 +190,31 @@ def give_points_all(viewers):
 	except Exception as e:
 		print("In utility.give_points_all -> Database Error: ")
 		print(e)
+
+def give_points_all_points(viewers,points):
+	#TODO: Subs get more points
+	try:
+		conn = sqlite3.connect('pointsDB.db')
+		cursor = conn.cursor()
+		for viewer in viewers:
+			print(viewer)
+			argc={'viewer':viewer,'points':points}
+			cursor.execute("SELECT EXISTS(SELECT Viewer from Points WHERE Viewer = '{viewer}')".format(**argc))
+			fetch, = cursor.fetchone() #Checks if the viewer is already in the database
+			if(fetch is 0):
+				#print("inserts!")
+				cursor.execute("INSERT INTO Points(Viewer, Points) VALUES('{viewer}', {points})".format(**argc))#inserts the viewer to the database
+			else:
+				#print("updates!")
+				cursor.execute("UPDATE Points SET Viewer = '{viewer}', Points = Points + {points} WHERE Viewer = '{viewer}'".format(**argc)) #updates points of the viewer
+		conn.commit()
+		cursor.close()
+		conn.close()
+		print("\n")
+	except Exception as e:
+		print("In utility.give_points_all -> Database Error: ")
+		print(e)
+
 
 def get_user_points(user):
 	points =0

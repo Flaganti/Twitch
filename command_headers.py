@@ -68,6 +68,18 @@ commands = {
         'access':0,
         'argc':0
     },
+    '!guessing':{
+        'limit':30,
+        'return':'guessing',
+        'access':0,
+        'argc':1
+    },
+    "!guess":{
+        'limit':0,
+        'return':'guess',
+        'access':0,
+        'argc':2
+    },
     '!points':{
         'limit':10,
         'return': '/me {user} has {points} Flags',

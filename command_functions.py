@@ -62,7 +62,12 @@ def check_returns_giveaway(command):
 def check_returns_enter(command):
 	if commands[command.lower()]['return']  == 'enter':
 		return True
-
+def check_returns_guessing(command):
+	if commands[command.lower()]['return']  == 'guessing':
+		return True
+def check_returns_guess(command):
+	if commands[command.lower()]['return']  == 'guess':
+		return True
 def check_access_level(level,command):
 	if(level >= commands[command.lower()]['access'] ):
 		return True
