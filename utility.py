@@ -24,7 +24,7 @@ def chat(sock, msg):
 def chatEnQ(): #UnQueues the message and sends it
 	global lastsent
 	global queue
-	if (time.time()-lastsent > (1.0/config.RATE) and len(queue)>0):
+	if (time.time()-lastsent > (1.0/config.MODRATE) and len(queue)>0):
 		sockthis,msgthis = queue.pop(0)
 		sockthis.send(("PRIVMSG {} :{}\r\n".format(config.CHAN, msgthis)))
 		lastsent=time.time()
@@ -102,7 +102,7 @@ def func_command(sock, user, message):
 			if(len(args) > 1 and userLevel >=2 and commands.check_returns_guessing(command.split(' ')[0])):
 				guess.guessStartEnd(sock,args,user)
 			elif(commands.check_returns_guess(command.split(' ')[0])):
-				if(guess.canEnter):
+				if(guess.canEnter or guess.canCheck):
 					guess.guess(sock,user,args)
 				else:
 					return

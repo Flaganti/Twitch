@@ -58,6 +58,8 @@ def bot_loop(): #TODO: Change to a queueing system so spamm gets proccessed more
                         del user
                     if giveaway.giveawayRunning and giveaway.isDrawn:
                         giveaway.look_for_name(username)
+                    if guess.isDrawn:
+                        guess.look_for_name(username)
                 except Exception as e:
                     print(e)
         except Exception as e:
@@ -73,6 +75,8 @@ def bot_loop(): #TODO: Change to a queueing system so spamm gets proccessed more
                         giveaway.run_timer(s[0])
                     if(guess.guessRunning):
                         guess.timer(s[0])
+                    if(guess.isDrawn):
+                        guess.claimTimer(s[0])
                 except Exception as exc:
                     print "An Error appeared in main.bot_loop.Exception timer,chatEnQ,threading,giveaway.run_timer didn't work correctly\n"
                     print exc
