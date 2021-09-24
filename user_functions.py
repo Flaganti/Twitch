@@ -5,12 +5,13 @@ import datetime
 import config
 from dateutil.relativedelta import relativedelta
 
+
 class UserClass:
     def __init__(self, tags, username):
         print("init UserClass")
         self.userName = username
-        self.badgeInfo, self.badges,self.clientNonce, self.color, self.dName, self.emotes,self.flags, self.id, self.mod,\
-            self.roomId, self.sub, self.timestamp, self.turbo, self.userId, \
+        self.badgeInfo, self.badges, self.clientNonce, self.color, self.dName, self.emotes, self.flags, self.id, \
+            self.mod, self.roomId, self.sub, self.timestamp, self.turbo, self.userId, \
             self.userType = tags[1:].split(";")
 
     def is_follower(self):
@@ -18,7 +19,8 @@ class UserClass:
             user_id = self.userId.split('=')[1]
             channel_id = self.roomId.split('=')[1]
             # Check if the clientID is not correctly being used here
-            #maybe this is the incorrect thing
+            # maybe this is the incorrect thing
+
             req = grequests.get("https://api.twitch.tv/kraken/users/%s/follows/channels/%s" % (user_id, channel_id),
                                 headers={'Client-ID': 'jktjplv8zqdnj0xbn3i8gag8y7tzg3',
                                          'Accept': 'application/vnd.twitchtv.v5+json'})
@@ -26,6 +28,7 @@ class UserClass:
             viewersDict = json.loads(res[0].content)
             return viewersDict["created_at"]
         except Exception as e:
+            print(e)
             return False
 
     def get_user_level(self):  # Get user level from tags -> Some tags are irrelevant
