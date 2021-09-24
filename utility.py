@@ -250,10 +250,10 @@ def get_user_points(user):
             print("User: " + user)
             conn = sqlite3.connect('pointsDB.db')
             cursor = conn.cursor()
-            #cursor.execute("SELECT Points from Points WHERE Viewer = '{}'".format(user))
+            cursor.execute("SELECT Points from Points WHERE Viewer = '{}'".format(user))
             # Checks if the viewer is already in the database
-            #points, = cursor.fetchone()
-            #print("Points: {} \n".format(points))
+            points = cursor.fetchone()[0]
+            print("Points: {} \n".format(points))
             conn.commit()
             cursor.close()
             conn.close()
