@@ -3,7 +3,6 @@ import grequests
 import json
 import datetime
 import config
-from dateutil.relativedelta import relativedelta
 class UserClass:
     def __init__(self,tags,username):
         self.userName = username

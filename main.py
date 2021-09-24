@@ -27,6 +27,7 @@ try:
     s[0].send("JOIN {}\r\n".format(config.CHAN).encode("utf-8"))
     s[0].settimeout(0) #Set timeout for socket
     connected = True #Socket successfully connected
+    print("Bot connected")
 except Exception as e:
     print(str(e))
     connected = False #Socket failed to connect
@@ -37,9 +38,10 @@ def bot_loop(): #TODO: Change to a queueing system so spamm gets proccessed more
         try:
             #TODO: Add timer commands (messages that get executed on a set interval)
             #TODO: Giveaway system
-            response = s[0].recv(1024).rstrip()
+            response = s[0].recv(1024).rstrip().decode("utf-8")
             if response == "PING :tmi.twitch.tv":
                 print(response+"\r\n")
+                print("this response?")
                 s[0].send("PONG :tmi.twitch.tv\r\n".encode("utf-8"))
                 print("Pong")
             else:
@@ -78,8 +80,8 @@ def bot_loop(): #TODO: Change to a queueing system so spamm gets proccessed more
                     if(guess.isDrawn):
                         guess.claimTimer(s[0])
                 except Exception as exc:
-                    print "An Error appeared in main.bot_loop.Exception timer,chatEnQ,threading,giveaway.run_timer didn't work correctly\n"
-                    print exc
+                    print("An Error appeared in main.bot_loop.Exception timer,chatEnQ,threading,giveaway.run_timer didn't work correctly\n")
+                    print(exc)
                 except KeyboardInterrupt:
                     #Make this a function to get called, so it can be called from the website as well (or restart or smth)
                     print("^C was pressed. Do some cleanup code in here!")

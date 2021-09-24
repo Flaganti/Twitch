@@ -177,7 +177,7 @@ def give_points_all(viewers):
 			argc={'viewer':viewer,'points':config.POINTAMOUNT}
 			cursor.execute("SELECT EXISTS(SELECT Viewer from Points WHERE Viewer = '{viewer}')".format(**argc))
 			fetch, = cursor.fetchone() #Checks if the viewer is already in the database
-			if(fetch is 0):
+			if(fetch == 0):
 				#print("inserts!")
 				cursor.execute("INSERT INTO Points(Viewer, Points) VALUES('{viewer}', {points})".format(**argc))#inserts the viewer to the database
 			else:
@@ -201,7 +201,7 @@ def give_points_all_points(viewers,points):
 			argc={'viewer':viewer,'points':points}
 			cursor.execute("SELECT EXISTS(SELECT Viewer from Points WHERE Viewer = '{viewer}')".format(**argc))
 			fetch, = cursor.fetchone() #Checks if the viewer is already in the database
-			if(fetch is 0):
+			if(fetch == 0):
 				#print("inserts!")
 				cursor.execute("INSERT INTO Points(Viewer, Points) VALUES('{viewer}', {points})".format(**argc))#inserts the viewer to the database
 			else:

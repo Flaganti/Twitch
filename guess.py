@@ -184,7 +184,7 @@ def guessStartEnd(sock,args,user):
             if(number == rednum):
                 winners.append(winner)
 
-        print "\nPoints are being given:"
+        print ("\nPoints are being given:")
         utility.give_points_all_points(winners,20)
         string=""
         for winner in winners:
@@ -244,8 +244,8 @@ def guess(sock,user,args):
             team2 = str(args[2])
             number2 = int(args[3])
         except Exception as e:
-            print "In Guess: "
-            print e
+            print("In Guess: ")
+            print(e)
         if(team1.lower() == "blue"):
             guessBlue[user]=number1
             guessRed[user]=number2
@@ -259,8 +259,8 @@ def guess(sock,user,args):
             team1 = str(args[0])
             number1 = int(args[1])
         except Exception as e:
-            print "In Guess: "
-            print e
+            print("In Guess: ")
+            print(e)
         if(team1.lower() == "blue"):
             guessBlue[user]=number1
         elif(team1.lower()=="red"):
@@ -271,8 +271,8 @@ def guess(sock,user,args):
             team1=str(args[0])
             win_loose=str(args[1])
         except Exception as e:
-            print "In giveaway guessing"
-            print e
+            print("In giveaway guessing")
+            print(e)
 
         if(team1.lower() == "blue" and (user in guessingEntries)==False):
             print("entered in blue")
