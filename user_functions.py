@@ -17,6 +17,7 @@ class UserClass:
         try:
             user_id = self.userId.split('=')[1]
             channel_id = self.roomId.split('=')[1]
+            # Check if the clientID is not correctly being used here
             req = grequests.get("https://api.twitch.tv/kraken/users/%s/follows/channels/%s" % (user_id, channel_id),
                                 headers={'Client-ID': 'jktjplv8zqdnj0xbn3i8gag8y7tzg3',
                                          'Accept': 'application/vnd.twitchtv.v5+json'})
