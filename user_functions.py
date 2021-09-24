@@ -18,8 +18,7 @@ class UserClass:
         try:
             user_id = self.userId.split('=')[1]
             channel_id = self.roomId.split('=')[1]
-            # Check if the clientID is not correctly being used here
-            # maybe this is the incorrect thing
+            # TODO: This needs to be reworked! as kraken is being deprecated
 
             req = grequests.get("https://api.twitch.tv/kraken/users/%s/follows/channels/%s" % (user_id, channel_id),
                                 headers={'Client-ID': 'jktjplv8zqdnj0xbn3i8gag8y7tzg3',
@@ -47,11 +46,12 @@ class UserClass:
 
     def get_followage(self):
         follow = self.is_follower()
-        if follow:
-            utc_dt = datetime.datetime.strptime(follow, '%Y-%m-%dT%H:%M:%SZ')
-            diff = relativedelta(datetime.datetime.utcnow(), utc_dt)
-            return "/me @%s has been following %s for %d Years %d Months %d Days %d Hours %d Minutes %d Seconds" % (
-                self.userName, config.CHAN[1:], diff.years, diff.months, diff.days, diff.hours, diff.minutes,
-                diff.seconds)
-        else:
-            return "/me @%s is not following the channel." % self.userName
+        return "/me !followage currently doesn't work"
+        # if follow:
+        #     utc_dt = datetime.datetime.strptime(follow, '%Y-%m-%dT%H:%M:%SZ')
+        #     diff = relativedelta(datetime.datetime.utcnow(), utc_dt)
+        #     return "/me @%s has been following %s for %d Years %d Months %d Days %d Hours %d Minutes %d Seconds" % (
+        #         self.userName, config.CHAN[1:], diff.years, diff.months, diff.days, diff.hours, diff.minutes,
+        #         diff.seconds)
+        # else:
+        #     return "/me @%s is not following the channel." % self.userName
