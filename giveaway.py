@@ -86,6 +86,7 @@ def giveaway(sock,args,user):
         giveawayRunning = True
         giveawayStarted = time.time()
 
+        message = "/me There is a current giveaway running for: "
         was_drawn = 0
         enteredQueue = []
         giveEntries = {}
