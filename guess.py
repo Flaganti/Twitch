@@ -33,7 +33,7 @@ was_drawn = 0
 winnerG=""
 
 ClaimTimer = 60
-guessTime=120
+guessTime=300
 
 def timer(sock):
     global guessBlue,guessRed,canEnter,guessRunning,guessStarted,timeLeft,last_sent_timer
