@@ -92,8 +92,8 @@ def giveaway(sock,args,user):
         giveEntries = {}
         giveawayQueue = []
 
-        was_drawn=0
-        message+= arg[0]
+        was_drawn = 0
+        message += arg[0]
         duration = 0
         access_level = 0
         maxEntries = 1

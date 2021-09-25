@@ -132,14 +132,14 @@ def guessStartEnd(sock, args, user):
             blueW = redW
             redW = tempW
 
-        for winner, number in guessBlueG.iteritems():
+        for winner, number in guessBlueG.items():
             print("blue")
             print(winner)
             print(number)
             if number == blueW:
                 winnersG.append(winner)
 
-        for winner, number in guessRedG.iteritems():
+        for winner, number in guessRedG.items():
             print("red")
             print(winner)
             print(number)
@@ -179,13 +179,13 @@ def guessStartEnd(sock, args, user):
             blueMum = redNum
             redNum = tempNum
 
-        for winner, number in guessBlue.iteritems():
+        for winner, number in guessBlue.items():
             print("blue")
             print(winner)
             print(number)
             if number == blueNum:
                 winners.append(winner)
-        for winner, number in guessRed.iteritems():
+        for winner, number in guessRed.items():
             print("red")
             print(winner)
             print(number)
@@ -218,7 +218,7 @@ def guessStartEnd(sock, args, user):
         else:
             print("Noone is eligable to win")
 
-    elif (case == "usage"):
+    elif case == "usage":
         utility.chat(sock, utility.command_formatter_message_without_points(
             "@{user} -> !guessing start or !guessing end blue <number> red <number>", user.userName))
     else:
@@ -257,10 +257,10 @@ def guess(sock, user, args):
         except Exception as e:
             print("In Guess: ")
             print(e)
-        if team1.lower() is "blue":
+        if team1.lower() == "blue":
             guessBlue[user] = number1
             guessRed[user] = number2
-        elif team1.lower() is "red":
+        elif team1.lower() == "red":
             guessBlue[user] = number2
             guessRed[user] = number1
 
@@ -272,9 +272,9 @@ def guess(sock, user, args):
         except Exception as e:
             print("In Guess: ")
             print(e)
-        if (team1.lower() == "blue"):
+        if team1.lower() == "blue":
             guessBlue[user] = number1
-        elif (team1.lower() == "red"):
+        elif team1.lower() == "red":
             guessRed[user] = number1
     elif len(args) == 2 and guessingGiveaway is True:
         print("has successfully entered the guessing giveaway")
