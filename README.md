@@ -1,6 +1,6 @@
 # FlagBot
 ## What is this bot?
-FlagBot is a python Twich bot used for Twitch chat moderation
+FlagBot is a python Twitch bot used for Twitch chat moderation
 
 FlagBot is constantly being updated with new features
 ## How to install?
@@ -11,7 +11,7 @@ FlagBot is constantly being updated with new features
 
 ### [Can I add my own commands to the bot?](https://github.com/Flaganti/Twitch/blob/master/command_headers.py)
 
-Yes. Use the !command command.
+Yes. Use the !command, command.
 
 Or if you know some python you can add commands in the command_headers.py
 
@@ -56,8 +56,8 @@ if you used 'command' as the return value, create your own python file and put i
 * Add custom commands
 * Access levels for commands
 * Timers
-* Point system (partialy)
-### To be implamented
+* Point system (partially)
+### To be implemented
 * Moderation support 
-* Point system (partialy)
+* Point system (partially)
 * Webserver for Point store
