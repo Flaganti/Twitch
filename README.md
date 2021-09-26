@@ -3,7 +3,10 @@
 FlagBot is a python Twich bot used for Twitch chat moderation
 FlagBot is constantly being updated with new features
 ## How to install?
-Just download/copy/clone the project and start the main.py.
+Download and install python 3.9
+Copy/clone/download the project
+Run pip install -r .\requirements.txt
+Run the code with py main.py
 
 ### [Can I add my own commands to the bot?](https://github.com/Flaganti/Twitch/blob/master/command_headers.py)
 
