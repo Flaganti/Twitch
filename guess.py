@@ -293,7 +293,7 @@ def guess(sock, user, args):
             else:
                 guessRedG[user] = "win"
             guessingEntries.append(user)
-        elif team1.lower() == "red" and (user in guessingEntries) == False:
+        elif team1.lower() == "red" and (user in guessingEntries) is False:
             print("entered in red")
             guessRedG[user] = win_loose.lower()
             if win_loose.lower() == "win":

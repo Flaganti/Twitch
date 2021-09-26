@@ -2,7 +2,6 @@
 import utility
 import random
 import time
-import config
 from user_functions import *
 
 giveawayRunning = False
