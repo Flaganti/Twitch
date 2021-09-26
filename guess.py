@@ -87,6 +87,9 @@ def guessStartEnd(sock, args, user):
     global guessBlue, guessRed, canEnter, guessRunning, guessStarted, guessingGiveaway, message, timeLeft, guessBlueG, \
         guessRedG, winnersG, canCheck, isDrawn, was_drawn, guessingEntries
     del args[0]
+    if len(args) < 1:
+        utility.chat(sock, utility.command_formatter_message_without_points(
+            "@{user} -> !guessing start or !guessing end blue <number> red <number>", user.userName))
     case = args[0]
     if case == "start":
         if len(args) == 1:
@@ -115,7 +118,6 @@ def guessStartEnd(sock, args, user):
             utility.chat(sock, "/me Guessing for: " + message + " has started!")
             utility.chat(sock, "/me Type !guess <teamcolor> <win/loose> for a chance to win.")
             timeLeft = guessTime / 60
-
     elif case == "end" and guessRunning is True and guessingGiveaway is True:
         del args[0]
         if len(args) != 4:
@@ -158,7 +160,6 @@ def guessStartEnd(sock, args, user):
         guessRedG = {}
         guessBlueG = {}
         timeLeft = -1
-
     elif case == "end" and guessRunning is True and guessingGiveaway is False:
         del args[0]
         if len(args) != 4:
@@ -217,7 +218,6 @@ def guessStartEnd(sock, args, user):
             was_drawn = time.time()
         else:
             print("Noone is eligable to win")
-
     elif case == "usage":
         utility.chat(sock, utility.command_formatter_message_without_points(
             "@{user} -> !guessing start or !guessing end blue <number> red <number>", user.userName))
