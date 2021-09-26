@@ -320,6 +320,40 @@ def createDBs():
         print(e)
 
 
+def get_access_token():
+    try:
+        if is_access_token_valid() is False:
+            req = grequests.post("https://id.twitch.tv/oauth2/token?"
+                                 "client_id=jktjplv8zqdnj0xbn3i8gag8y7tzg3&"
+                                 "client_secret=%s&"
+                                 "grant_type=client_credentials" % config.CLIENT_SECRET)
+            res = grequests.map([req])
+            config.APP_ACCESS_TOKEN = json.loads(res[0].content)["access_token"]
+        else:
+            print("Access_token is already valid")
+    except Exception as e:
+        print("Error getting access_token")
+        print(e)
+
+
+def is_access_token_valid():
+    try:
+        if config.APP_ACCESS_TOKEN != "":
+            req = grequests.get("https://id.twitch.tv/oauth2/validate",
+                                headers={'Authorization': 'Bearer %s' % config.APP_ACCESS_TOKEN})
+            res = grequests.map([req])
+            if res[0].status_code == 200:
+                return True
+            else:
+                return False
+        else:
+            return False
+    except Exception as e:
+        print("Error validating access_token")
+        print(e)
+        return False
+
+
 ################################
 
 def convert_enddate_to_seconds(ts):
