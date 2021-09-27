@@ -30,6 +30,7 @@ try:
     # Socket successfully connected
     connected = True
     print("Bot connected")
+    utility.chat(s[0], "Do not fear, as I is here!")
 except Exception as e:
     print(str(e))
     # Socket failed to connect
@@ -73,7 +74,7 @@ def bot_loop():  # TODO: Change to a queueing system so spamm gets proccessed mo
             global point_timer
             try:
                 utility.check_timers(s[0])  # Checks if any timers need execution
-                utility.chatEnQ()  # If there is any messsage in the queue is dequeses it and sends it.
+                utility.chatEnQ()  # If there is any message in the queue is dequeued it and sends it.
                 if time.time() - point_timer >= config.TIMERFORPOINTS:  # Start a thread to get requests
                     t1 = threading.Thread(target=utility.try_giving_points)
                     t1.start()
@@ -91,13 +92,15 @@ def bot_loop():  # TODO: Change to a queueing system so spamm gets proccessed mo
             except KeyboardInterrupt:
                 # Make this a function to get called, so it can be called from the website as well (or restart or smth)
                 print("^C was pressed. Do some cleanup code in here!")
+                utility.chat(s[0], "I am now leaving the chat o7, till next time.")
+                utility.chatEnQ()
                 sys.exit()
         except KeyboardInterrupt:
             # Make this a function to get called, so it can be called from the website as well (or restart or smth)
             print("^C was pressed. Do some cleanup code in here!")
+            utility.chat(s[0], "I am now leaving the chat o7, till next time.")
+            utility.chatEnQ()
             sys.exit()
-        # print(e)
-        # time.sleep(1 / config.MODRATE)# Not needed anymore as chatEnQ takes care of it
 
 
 if __name__ == "__main__":

@@ -67,13 +67,13 @@ def func_command(sock, user, message):
                 command = command.split(' ')[0]
 
                 if commands.is_on_cooldown(command):
-                    print('Command is on cooldown. (%s) (%s) (%ss remaining)' % (
+                    print('Command is on cool-down. (%s) (%s) (%ss remaining)' % (
                         command, username, commands.get_cooldown_remaining(command)))
 
                 else:
-                    print('Command is valid an not on cooldown. (%s) (%s)' % (command, username))
+                    print('Command is valid an not on cool-down. (%s) (%s)' % (command, username))
                     result = commands.pass_to_function(command, args)
-                    print("command resault was posted back")
+                    print("command result was posted back")
                     commands.update_last_used(command)
 
                     if result:
@@ -119,9 +119,9 @@ def func_command(sock, user, message):
                     return
         else:
             if commands.is_on_cooldown(command.split(' ')[0]):
-                print('Command is on cooldown. (%s) (%s) (%ss remaining)' % (
+                print('Command is on cool-down. (%s) (%s) (%ss remaining)' % (
                     command, username, commands.get_cooldown_remaining(command)))
-            elif commands.check_has_args(command.split(' ')[0]):  # TODO: Make this a seperate function
+            elif commands.check_has_args(command.split(' ')[0]):  # TODO: Make this a separate function
                 args = command.split(' ')
                 del args[0]
                 command = command.split(' ')[0]
@@ -129,7 +129,7 @@ def func_command(sock, user, message):
                 chat(sock, command_formatter(user, command, args))
 
             elif commands.check_has_return(command):
-                print('Command is valid an not on cooldown. (%s) (%s)' % (command, username))
+                print('Command is valid an not on cool-down. (%s) (%s)' % (command, username))
 
                 resp = '@%s > %s' % (username, commands.get_return(command))
                 commands.update_last_used(command)
@@ -264,7 +264,7 @@ def get_user_points(user):
 
 # Formating
 
-def command_formatter_message_without_points(message, username):  # Used for message formating( Manual strings)
+def command_formatter_message_without_points(message, username):  # Used for message formatting( Manual strings)
     points = 0
     argc = {'user': username, 'points': points}
     return str(message.format(**argc))
@@ -287,7 +287,7 @@ def command_formatter(user, command,
     points = get_user_points(username)
     argc = {}
     if len(args) < 1:
-        argc = {'user': username, 'target': username, 'points': points, 'follow': followage}  # creats dict
+        argc = {'user': username, 'target': username, 'points': points, 'follow': followage}  # creates dict
     else:
         argc = {'user': username, 'target': args[0], 'points': points, 'follow': followage}
 
@@ -300,7 +300,7 @@ def check_timers(sock):  # Checks for timers
         if commands.check_is_timed(key):
             # print(commands.get_last_used(key))
             if commands.get_last_used(key) >= commands.get_timer_repeat(key):
-                if commands.get_return(key) == 'command':  # if the timer is a seperate command -> execute this
+                if commands.get_return(key) == 'command':  # if the timer is a separate command -> execute this
                     result = commands.pass_to_function(key, [])
                     chat(sock, command_formatter_message(result, ""))  # formats result from command
                 else:
@@ -359,10 +359,7 @@ def is_access_token_valid():
 def convert_enddate_to_seconds(ts):
     try:
         utc_dt = datetime.datetime.strptime(ts, '%Y-%m-%dT%H:%M:%SZ')
-        # Convert UTC datetime to seconds since the Epoch
         timestamp = (utc_dt - datetime.datetime(1970, 1, 1)).total_seconds()
-        # smth = (datetime.datetime.utcnow() - utc_dt).month
-        # print(smth)
         return timestamp
     except():
         return time.time()
