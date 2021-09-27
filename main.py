@@ -103,6 +103,7 @@ def bot_loop():  # TODO: Change to a queueing system so spamm gets proccessed mo
             sys.exit()
 
 
+
 if __name__ == "__main__":
     utility.createDBs()
     utility.get_access_token()
